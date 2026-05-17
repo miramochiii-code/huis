@@ -65,7 +65,6 @@
       font-size: 12px; color: var(--muted); white-space: nowrap;
     }
 
-    /* tooltip */
     .tooltip-wrap { position: relative; }
     .tooltip-wrap .tip {
       display: none; position: absolute; top: 44px; left: 50%; transform: translateX(-50%);
@@ -74,7 +73,6 @@
     }
     .tooltip-wrap:hover .tip { display: block; }
 
-    /* ── MAP ── */
     #map {
       position: fixed; top: var(--toolbar-h); left: 0; right: 0; bottom: 0;
       z-index: 1;
@@ -129,7 +127,6 @@
       padding: 4px 8px; background: var(--bg); cursor: pointer;
     }
 
-    /* list items */
     .list-item {
       display: flex; align-items: flex-start; gap: 10px; padding: 10px;
       border-radius: 10px; cursor: pointer; transition: background .15s;
@@ -177,7 +174,6 @@
     .modal-input:focus { outline: none; border-color: var(--accent); }
     textarea.modal-input { resize: vertical; min-height: 72px; }
 
-    /* star rating */
     #star-rating { display: flex; gap: 4px; margin-top: 4px; }
     .star { font-size: 24px; cursor: pointer; color: #d1d5db; transition: color .1s; }
     .star.filled { color: #f59e0b; }
@@ -201,7 +197,7 @@
       cursor: pointer;
     }
 
-    /* area popup / editor */
+    /* area editor */
     .area-popup input,
     .area-popup select {
       width: 100%;
@@ -215,16 +211,17 @@
     }
 
     .area-popup button {
-      padding: 9px 12px;
-      border-radius: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
       border: none;
       cursor: pointer;
       font-size: 13px;
       font-weight: 700;
+      font-family: inherit;
     }
 
     .area-popup .save-btn { background: var(--accent); color: #fff; }
-    .area-popup .del-btn  { background: #fee2e2; color: var(--rood); }
+    .area-popup .del-btn  { background: var(--rood); color: #fff; }
     .area-popup .edit-btn { background: #e3f2fd; color: var(--accent); }
     .area-popup .cancel-btn { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
 
@@ -247,6 +244,8 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 18px 16px 28px;
+      display: flex;
+      flex-direction: column;
     }
 
     .area-editor-header {
@@ -268,7 +267,7 @@
     }
 
     .area-editor-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
     }
 
@@ -281,20 +280,6 @@
       cursor: pointer;
       font-size: 13px;
       font-weight: 700;
-    }
-
-    .area-editor-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .area-editor-actions .save-btn,
-    .area-editor-actions .del-btn,
-    .area-editor-actions .edit-btn,
-    .area-editor-actions .cancel-btn {
-      padding: 9px 12px;
-      font-size: 13px;
     }
 
     .area-editor-subtitle {
@@ -317,6 +302,30 @@
       display: block;
       margin-bottom: 4px;
       color: #7a5a00;
+    }
+
+    .area-main-action {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .area-main-action svg {
+      flex-shrink: 0;
+    }
+
+    .area-name-save {
+      display: none;
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .area-name-save.show {
+      display: block;
     }
 
     .area-tags-section {
@@ -448,10 +457,30 @@
       color: #b71c1c;
     }
 
-    /* ── HOUSE MARKER ── */
-    .house-circle-icon { /* defined via Leaflet divIcon */ }
+    .area-delete-wrap {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
 
-    /* ── STATUS TOAST ── */
+    .area-delete-btn {
+      width: 100%;
+      background: var(--rood);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .area-delete-btn:hover {
+      opacity: .92;
+    }
+
+    .house-circle-icon { }
+
     #toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
       background: #333; color: #fff; padding: 8px 18px; border-radius: 20px;
@@ -460,16 +489,13 @@
     }
     #toast.show { opacity: 1; }
 
-    /* Leaflet draw toolbar tweak */
     .leaflet-draw-toolbar a { background-color: var(--card) !important; }
 
-    /* scrollbar */
     #sidebar-body::-webkit-scrollbar,
     .area-editor-panel::-webkit-scrollbar { width: 6px; }
     #sidebar-body::-webkit-scrollbar-thumb,
     .area-editor-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    /* ── SIDEBAR HANDLE (mobile pill) ── */
     #sidebar-handle {
       display: none; width: 40px; height: 4px; background: var(--border);
       border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0;
@@ -489,9 +515,6 @@
       }
     }
 
-    /* ════════════════════════════════════════════════
-       RESPONSIVE – MOBILE (≤ 768 px)
-    ════════════════════════════════════════════════ */
     @media (max-width: 768px) {
       #toolbar {
         padding: 0 8px; gap: 5px;
@@ -582,26 +605,17 @@
       }
 
       .area-editor-title {
-        font-size: 17px;
+        font-size: 18px;
       }
 
       .area-editor-close {
         min-width: 88px;
-      }
-
-      .area-editor-actions {
-        flex-direction: column;
-      }
-
-      .area-editor-actions button {
-        width: 100%;
       }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════ TOOLBAR -->
 <div id="toolbar">
   <h1>🏠 <span class="btn-lbl">Ik ben gewoon developer!!</span></h1>
   <div class="tb-sep"></div>
@@ -613,9 +627,9 @@
 
   <div class="tb-sep"></div>
 
-  <button class="tb-btn" id="btn-polygon" title="Wijk tekenen">
+  <button class="tb-btn" id="btn-polygon" title="Gebied tekenen">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 20 2 20"/></svg>
-    <span class="btn-lbl">Wijk tekenen</span>
+    <span class="btn-lbl">Gebied tekenen</span>
   </button>
   <button class="tb-btn" id="btn-rect" title="Rechthoek tekenen">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/></svg>
@@ -636,22 +650,18 @@
       <span class="btn-lbl">Uitleg</span>
     </button>
     <div class="tip">
-      <strong>Zones tekenen:</strong> Kies een kleur → klik "Wijk tekenen" of "Rechthoek" → teken op de kaart → dubbelklik om af te ronden.<br><br>
-      <strong>Huis toevoegen:</strong> Klik 1× op de kaart (ook op een getekende wijk) om een huis-markering te plaatsen.<br><br>
-      <strong>Wijk-instellingen:</strong> Dubbelklik op een getekend gebied om naam, tags of vorm te bewerken.<br><br>
-      <strong>Vorm bewerken:</strong> Gebruik in het area-scherm de knop "Vorm bewerken", sleep de punten/hoeken en klik daarna op "Vorm opslaan".<br><br>
+      <strong>Gebieden tekenen:</strong> Kies een kleur → klik "Gebied tekenen" of "Rechthoek" → teken op de kaart → dubbelklik om af te ronden.<br><br>
+      <strong>Huis toevoegen:</strong> Klik 1× op de kaart (ook op een getekend gebied) om een huis-markering te plaatsen.<br><br>
+      <strong>Gebied-instellingen:</strong> Dubbelklik op een getekend gebied om de naam te bewerken of te verwijderen.<br><br>
       <strong>Huis verplaatsen:</strong> Klik en sleep een huis-markering naar de juiste plek.
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ MAP -->
 <div id="map"></div>
 
-<!-- ═══════════════════════════════════════════════ SIDEBAR TOGGLE -->
 <button id="sidebar-toggle" title="Zijpaneel">&#9776;</button>
 
-<!-- ═══════════════════════════════════════════════ SIDEBAR -->
 <div id="sidebar">
   <div id="sidebar-handle"></div>
   <div id="sidebar-header">
@@ -660,13 +670,13 @@
   </div>
 
   <div id="sidebar-tabs">
-    <div class="stab active" data-tab="wijken">Wijken</div>
+    <div class="stab active" data-tab="gebieden">Gebieden</div>
     <div class="stab" data-tab="huizen">Huizen</div>
   </div>
 
   <div id="sidebar-body">
-    <div class="section active" id="sec-wijken">
-      <div id="list-wijken"></div>
+    <div class="section active" id="sec-gebieden">
+      <div id="list-gebieden"></div>
     </div>
 
     <div class="section" id="sec-huizen">
@@ -682,7 +692,6 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ LEGEND -->
 <div id="legend">
   <h3>Legenda</h3>
   <div class="leg-row"><div class="leg-dot" style="background:var(--groen)"></div> Hier willen we wonen</div>
@@ -691,7 +700,6 @@
   <div class="leg-row"><div style="width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #333;flex-shrink:0"></div> Huis markering</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ HOUSE MODAL -->
 <div id="modal-overlay">
   <div id="modal">
     <h3 id="modal-title">Huis toevoegen</h3>
@@ -722,16 +730,11 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ TOAST -->
 <div id="toast"></div>
 
-<!-- Firebase SDK (compat v9) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<!-- Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Leaflet.draw -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 
 <script>
@@ -849,13 +852,6 @@ const houseCache = {};
 
 let modalHouseId = null;
 
-let activeAreaEdit = {
-  areaId: null,
-  editor: null,
-  layerBackup: null,
-  isEditing: false
-};
-
 document.querySelectorAll('.color-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
@@ -879,11 +875,6 @@ function stopDrawing() {
 }
 
 function startDrawing(mode) {
-  if (activeAreaEdit.isEditing) {
-    toast('Sla eerst de huidige area-bewerking op of annuleer deze.');
-    return;
-  }
-
   stopDrawing();
   currentDrawMode = mode;
   const col = COLORS[selectedColor].hex;
@@ -987,11 +978,7 @@ function addCustomAreaTag(areaId) {
     return;
   }
 
-  const next = [
-    ...current,
-    { id, label, tone, emoji, preset: false }
-  ];
-
+  const next = [...current, { id, label, tone, emoji, preset: false }];
   saveAreaTags(areaId, next);
 
   labelInput.value = '';
@@ -1042,177 +1029,50 @@ window.toggleAreaPresetTag = toggleAreaPresetTag;
 window.addCustomAreaTag = addCustomAreaTag;
 window.removeCustomAreaTag = removeCustomAreaTag;
 
-function cloneLatLngs(latlngs) {
-  return JSON.parse(JSON.stringify(latlngs));
-}
-
-function serializeLayerLatLngs(layer, type) {
-  if (type === 'rectangle') {
-    return JSON.stringify(layer.getLatLngs());
-  }
-  return JSON.stringify(layer.getLatLngs());
-}
-
-function createAreaEditorInstance(entry) {
-  if (!entry) return null;
-  const layer = entry.layer;
-  const type = entry.data.type;
-
-  if (type === 'rectangle') {
-    return new L.Edit.Rectangle(layer, {
-      selectedPathOptions: {
-        maintainColor: true
-      }
-    });
-  }
-
-  return new L.Edit.Poly(layer, {
-    selectedPathOptions: {
-      maintainColor: true
-    }
-  });
-}
-
-function stopAreaGeometryEdit({ revert = false } = {}) {
-  if (!activeAreaEdit.isEditing || !activeAreaEdit.areaId) return;
-
-  const entry = areaCache[activeAreaEdit.areaId];
-  if (entry && activeAreaEdit.editor) {
-    if (revert && activeAreaEdit.layerBackup) {
-      try {
-        entry.layer.setLatLngs(cloneLatLngs(activeAreaEdit.layerBackup));
-        if (entry.data.type === 'rectangle' && entry.layer.redraw) entry.layer.redraw();
-        if (entry.data.type === 'polygon' && entry.layer.redraw) entry.layer.redraw();
-      } catch(e) {}
-    }
-
-    try { activeAreaEdit.editor.disable(); } catch(e) {}
-  }
-
-  activeAreaEdit = {
-    areaId: null,
-    editor: null,
-    layerBackup: null,
-    isEditing: false
-  };
-}
-
-function startAreaGeometryEdit(areaId) {
-  const entry = areaCache[areaId];
-  if (!entry) return;
-
-  if (currentDrawMode) {
-    toast('Stop eerst met tekenen.');
-    return;
-  }
-
-  if (activeAreaEdit.isEditing && activeAreaEdit.areaId !== areaId) {
-    toast('Je bent al een andere area aan het bewerken.');
-    return;
-  }
-
-  if (activeAreaEdit.isEditing && activeAreaEdit.areaId === areaId) {
-    toast('Deze area staat al in bewerkmodus.');
-    return;
-  }
-
-  const editor = createAreaEditorInstance(entry);
-  if (!editor) return;
-
-  activeAreaEdit = {
-    areaId,
-    editor,
-    layerBackup: cloneLatLngs(entry.layer.getLatLngs()),
-    isEditing: true
-  };
-
-  try { editor.enable(); } catch(e) {
-    stopAreaGeometryEdit();
-    toast('Bewerken van deze area lukt niet.');
-    return;
-  }
-
-  openAreaEditor(areaId);
-  toast('Vorm-bewerking gestart. Sleep punten of hoeken op de kaart.');
-}
-
-function saveAreaGeometry(areaId) {
-  const entry = areaCache[areaId];
-  if (!entry) return;
-
-  if (!activeAreaEdit.isEditing || activeAreaEdit.areaId !== areaId) {
-    toast('Deze area staat niet in bewerkmodus.');
-    return;
-  }
-
-  const latlngs = serializeLayerLatLngs(entry.layer, entry.data.type);
-  stopAreaGeometryEdit({ revert: false });
-
-  areasRef.child(areaId).update({ latlngs });
-  openAreaEditor(areaId);
-  toast('Vorm opgeslagen!');
-}
-
-function cancelAreaGeometryEdit(areaId) {
-  if (!activeAreaEdit.isEditing || activeAreaEdit.areaId !== areaId) {
-    toast('Er is geen actieve vorm-bewerking.');
-    return;
-  }
-
-  stopAreaGeometryEdit({ revert: true });
-  openAreaEditor(areaId);
-  toast('Vorm-bewerking geannuleerd.');
-}
-
-window.startAreaGeometryEdit = startAreaGeometryEdit;
-window.saveAreaGeometry = saveAreaGeometry;
-window.cancelAreaGeometryEdit = cancelAreaGeometryEdit;
-
 function buildAreaPopupHtml(data) {
   const selectedTags = normalizeAreaTags(data.tags || []);
   const selectedIds = new Set(selectedTags.map(tag => tag.id));
   const customTags = selectedTags.filter(tag => !tag.preset);
-  const isEditingShape = activeAreaEdit.isEditing && activeAreaEdit.areaId === data.id;
-  const geometryLabel = data.type === 'rectangle' ? 'Rechthoek' : 'Polygoon';
 
   return `
     <div class="area-editor-overlay">
       <div class="area-editor-panel">
         <div class="area-editor-header">
           <div class="area-editor-toprow">
-            <div class="area-editor-title">Wijk bewerken</div>
+            <div class="area-editor-title">Gebied</div>
             <button type="button" class="area-editor-close" onclick="closeAreaEditor()">Sluiten</button>
           </div>
 
-          <div class="area-editor-actions">
-            <button class="save-btn" onclick="saveAreaName('${data.id}')">Naam opslaan</button>
-            ${
-              isEditingShape
-                ? `<button class="save-btn" onclick="saveAreaGeometry('${data.id}')">Vorm opslaan</button>
-                   <button class="cancel-btn" onclick="cancelAreaGeometry('${data.id}')">Vorm annuleren</button>`
-                : `<button class="edit-btn" onclick="startAreaGeometryEdit('${data.id}')">Vorm bewerken</button>`
-            }
-            <button class="del-btn" onclick="deleteArea('${data.id}')">Verwijderen</button>
+          <div class="area-editor-subtitle">
+            ${COLORS[data.color].label}<br>
+            Wijzig de naam of tags van dit gebied.
           </div>
-
-          <div class="area-editor-subtitle" style="margin-top:10px;">
-            ${COLORS[data.color].label} · ${geometryLabel}<br>
-            Wijzig naam, tags en vorm van deze area in hetzelfde scherm.
-          </div>
-
-          ${
-            isEditingShape
-              ? `<div class="area-edit-status">
-                  <strong>Vorm-bewerking actief</strong>
-                  Sleep de ${data.type === 'rectangle' ? 'hoeken' : 'punten'} op de kaart. Kies daarna <em>Vorm opslaan</em> of <em>Vorm annuleren</em>.
-                 </div>`
-              : ''
-          }
         </div>
 
         <div class="area-popup">
           <label style="font-size:11px;color:#666">Naam:</label>
-          <input id="ap-name-${data.id}" value="${escapeHtml(data.name || '')}" placeholder="Bijv. Archipelbuurt" />
+          <input
+            id="ap-name-${data.id}"
+            value="${escapeHtml(data.name || '')}"
+            placeholder="Bijv. Archipelbuurt"
+            oninput="handleAreaNameInput('${data.id}')"
+          />
+
+          <button
+            id="ap-save-name-${data.id}"
+            class="save-btn area-name-save"
+            onclick="saveAreaName('${data.id}')"
+          >
+            Naam opslaan
+          </button>
+
+          <button class="edit-btn area-main-action" onclick="startAreaGeometryEdit('${data.id}')">
+            <span>Gebied bewerken</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+            </svg>
+          </button>
 
           <div class="area-tags-section">
             <div class="area-tags-title">Gekozen tags</div>
@@ -1260,6 +1120,10 @@ function buildAreaPopupHtml(data) {
               }
             </div>
           </div>
+
+          <div class="area-delete-wrap">
+            <button class="area-delete-btn" onclick="deleteArea('${data.id}')">Gebied verwijderen</button>
+          </div>
         </div>
       </div>
     </div>`;
@@ -1281,6 +1145,8 @@ function openAreaEditor(areaId, latlng) {
     .setLatLng(latlng || areaCache[areaId].layer.getBounds().getCenter())
     .setContent(buildAreaPopupHtml(cur))
     .openOn(map);
+
+  setTimeout(() => syncAreaNameSaveButton(areaId), 40);
 }
 
 function closeAreaEditor() {
@@ -1288,11 +1154,25 @@ function closeAreaEditor() {
 }
 window.closeAreaEditor = closeAreaEditor;
 
-function renderArea(data) {
-  if (activeAreaEdit.isEditing && activeAreaEdit.areaId === data.id) {
-    stopAreaGeometryEdit({ revert: false });
-  }
+function syncAreaNameSaveButton(areaId) {
+  const input = document.getElementById(`ap-name-${areaId}`);
+  const button = document.getElementById(`ap-save-name-${areaId}`);
+  const original = areaCache[areaId]?.data?.name || '';
 
+  if (!input || !button) return;
+
+  const current = input.value;
+  const changed = current !== original;
+
+  button.classList.toggle('show', changed);
+}
+
+function handleAreaNameInput(areaId) {
+  syncAreaNameSaveButton(areaId);
+}
+window.handleAreaNameInput = handleAreaNameInput;
+
+function renderArea(data) {
   if (areaCache[data.id]) {
     drawnItems.removeLayer(areaCache[data.id].layer);
   }
@@ -1315,7 +1195,7 @@ function renderArea(data) {
   let _areaClickTimer = null;
   layer.on('click', e => {
     L.DomEvent.stopPropagation(e);
-    if (currentDrawMode || activeAreaEdit.isEditing) return;
+    if (currentDrawMode) return;
     if (_areaClickTimer) return;
     _areaClickTimer = setTimeout(() => {
       _areaClickTimer = null;
@@ -1328,13 +1208,12 @@ function renderArea(data) {
   layer.on('dblclick', e => {
     L.DomEvent.stopPropagation(e);
     if (_areaClickTimer) { clearTimeout(_areaClickTimer); _areaClickTimer = null; }
-    if (currentDrawMode) return;
     openAreaEditor(normalizedData.id, e.latlng);
   });
 
   drawnItems.addLayer(layer);
   areaCache[normalizedData.id] = { data: normalizedData, layer };
-  renderSidebarWijken();
+  renderSidebarGebieden();
 }
 
 window.saveAreaName = function(id) {
@@ -1343,11 +1222,12 @@ window.saveAreaName = function(id) {
   toast('Naam opgeslagen!');
 };
 
+window.startAreaGeometryEdit = function(id) {
+  toast('Gebied bewerken staat klaar voor de volgende stap.');
+};
+
 window.deleteArea = function(id) {
   if (!confirm('Weet je zeker dat je dit gebied wilt verwijderen?')) return;
-  if (activeAreaEdit.isEditing && activeAreaEdit.areaId === id) {
-    stopAreaGeometryEdit({ revert: true });
-  }
   areasRef.child(id).remove();
   map.closePopup();
   toast('Gebied verwijderd.');
@@ -1392,7 +1272,7 @@ function renderHouse(data) {
 }
 
 map.on('click', e => {
-  if (currentDrawMode || activeAreaEdit.isEditing) return;
+  if (currentDrawMode) return;
 
   const id = uid();
   const houseData = {
@@ -1417,7 +1297,7 @@ const mSave     = document.getElementById('m-save');
 const mDelete   = document.getElementById('m-delete');
 const mCancel   = document.getElementById('m-cancel');
 const starEls   = document.querySelectorAll('#star-rating .star');
-let   modalRating = 0;
+let modalRating = 0;
 
 function setStars(n) {
   modalRating = n;
@@ -1507,12 +1387,12 @@ document.querySelectorAll('.stab').forEach(tab => {
 document.getElementById('sort-huizen').addEventListener('change', renderSidebarHuizen);
 document.getElementById('house-search').addEventListener('input', renderSidebarHuizen);
 
-function renderSidebarWijken() {
-  const container = document.getElementById('list-wijken');
+function renderSidebarGebieden() {
+  const container = document.getElementById('list-gebieden');
   const areas = Object.values(areaCache);
 
   if (!areas.length) {
-    container.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nog geen wijken getekend.</p>';
+    container.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nog geen gebieden getekend.</p>';
     return;
   }
 
@@ -1535,7 +1415,7 @@ function renderSidebarWijken() {
       <div class="dot" style="background:${col}"></div>
       <div class="info">
         <div class="name">${name}</div>
-        <div class="sub">${COLORS[data.color]?.label || ''} · ${data.type === 'rectangle' ? 'Rechthoek' : 'Polygoon'}</div>
+        <div class="sub">${COLORS[data.color]?.label || ''}</div>
         ${tagHtml}
       </div>
     </div>`;
@@ -1593,11 +1473,10 @@ window.panToHouse = function(id) {
   openModal(id);
 };
 
-areasRef.on('child_added',   snap => { renderArea(snap.val()); });
+areasRef.on('child_added', snap => { renderArea(snap.val()); });
 areasRef.on('child_changed', snap => {
   const incoming = snap.val();
   const shouldReopen = map._popup && map._popup.isOpen && map._popup.isOpen() &&
-    activeAreaEdit.areaId !== incoming.id &&
     String(map._popup.getContent()).includes(`ap-name-${incoming.id}`);
 
   renderArea(incoming);
@@ -1608,18 +1487,14 @@ areasRef.on('child_changed', snap => {
 });
 areasRef.on('child_removed', snap => {
   const id = snap.val().id;
-  if (activeAreaEdit.isEditing && activeAreaEdit.areaId === id) {
-    stopAreaGeometryEdit({ revert: false });
-  }
-
   if (areaCache[id]) {
     drawnItems.removeLayer(areaCache[id].layer);
     delete areaCache[id];
-    renderSidebarWijken();
+    renderSidebarGebieden();
   }
 });
 
-housesRef.on('child_added',   snap => { renderHouse(snap.val()); });
+housesRef.on('child_added', snap => { renderHouse(snap.val()); });
 housesRef.on('child_changed', snap => {
   renderHouse(snap.val());
   if (modalHouseId === snap.val().id && overlay.classList.contains('open')) {
@@ -1635,19 +1510,14 @@ housesRef.on('child_removed', snap => {
   }
 });
 
-map.on('popupclose', () => {
-  if (activeAreaEdit.isEditing) {
-    toast('Vorm-bewerking blijft actief op de kaart totdat je opslaat of annuleert.');
-  }
-});
-
 const observer = new MutationObserver(() => {
   setTimeout(() => map.invalidateSize(), 260);
 });
 observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
 
-renderSidebarWijken();
+renderSidebarGebieden();
 renderSidebarHuizen();
 </script>
+
 </body>
 </html>
