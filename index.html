@@ -199,35 +199,117 @@
       cursor: pointer;
     }
 
-    /* area popup */
+    /* area popup / editor */
     .area-popup input,
     .area-popup select {
       width: 100%;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px 8px;
-      font-size: 13px;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
       margin-bottom: 8px;
       background: #fff;
+      font-family: inherit;
     }
-    .area-popup button { padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; }
-    .area-popup .save-btn { background: var(--accent); color: #fff; margin-right: 6px; }
+    .area-popup button {
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .area-popup .save-btn { background: var(--accent); color: #fff; }
     .area-popup .del-btn  { background: #fee2e2; color: var(--rood); }
 
-    /* area tags */
+    .area-editor-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 6000;
+      background: rgba(17, 24, 39, 0.48);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .area-editor-panel {
+      width: min(760px, 100vw);
+      height: 100vh;
+      background: var(--card);
+      color: var(--text);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 18px 16px 28px;
+    }
+
+    .area-editor-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--card);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .area-editor-toprow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .area-editor-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .area-editor-close {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .area-editor-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .area-editor-actions .save-btn,
+    .area-editor-actions .del-btn {
+      padding: 9px 12px;
+      font-size: 13px;
+    }
+
+    .area-editor-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     .area-tags-section {
-      margin-top: 12px;
-      padding-top: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
       border-top: 1px solid var(--border);
     }
+
     .area-tags-title {
       font-size: 11px;
       color: var(--muted);
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-transform: uppercase;
       letter-spacing: .04em;
     }
+
     .area-tags-list,
     .area-tags-selected {
       display: flex;
@@ -235,64 +317,76 @@
       gap: 8px;
       margin-top: 8px;
     }
+
     .area-tag-chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 7px 10px;
+      padding: 8px 11px;
       border-radius: 999px;
       border: 1px solid transparent;
       cursor: pointer;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       line-height: 1;
       background: #fff;
     }
+
     .area-tag-chip.is-positive {
       background: #e8f5e9;
       color: #1b5e20;
       border-color: #b7dfba;
     }
+
     .area-tag-chip.is-negative {
       background: #ffebee;
       color: #b71c1c;
       border-color: #ffc9cf;
     }
+
     .area-tag-chip.is-selected {
       box-shadow: inset 0 0 0 2px rgba(0,0,0,.08);
     }
+
     .area-tag-chip.is-unselected {
       opacity: .92;
     }
+
     .area-tag-chip .tag-plus,
     .area-tag-chip .tag-remove {
       font-weight: 800;
     }
+
     .area-tags-empty {
       font-size: 12px;
       color: var(--muted);
     }
+
     .custom-tag-box {
       margin-top: 10px;
-      padding: 10px;
+      padding: 12px;
       border: 1px dashed var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       background: #fafbfc;
     }
+
     .custom-tag-row {
       display: flex;
       gap: 8px;
       margin-top: 8px;
     }
+
     .custom-tag-row input,
     .custom-tag-row select {
       flex: 1;
       min-width: 0;
     }
+
     .custom-tag-row .emoji-input {
       max-width: 72px;
       text-align: center;
     }
+
     .custom-tag-row button {
       padding: 8px 12px;
       border-radius: 8px;
@@ -302,12 +396,14 @@
       font-weight: 700;
       cursor: pointer;
     }
+
     .sidebar-area-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 6px;
     }
+
     .sidebar-area-tag {
       display: inline-flex;
       align-items: center;
@@ -317,10 +413,12 @@
       padding: 4px 8px;
       border-radius: 999px;
     }
+
     .sidebar-area-tag.positive {
       background: #e8f5e9;
       color: #1b5e20;
     }
+
     .sidebar-area-tag.negative {
       background: #ffebee;
       color: #b71c1c;
@@ -342,13 +440,29 @@
     .leaflet-draw-toolbar a { background-color: var(--card) !important; }
 
     /* scrollbar */
-    #sidebar-body::-webkit-scrollbar { width: 5px; }
-    #sidebar-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    #sidebar-body::-webkit-scrollbar,
+    .area-editor-panel::-webkit-scrollbar { width: 6px; }
+    #sidebar-body::-webkit-scrollbar-thumb,
+    .area-editor-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     /* ── SIDEBAR HANDLE (mobile pill) ── */
     #sidebar-handle {
       display: none; width: 40px; height: 4px; background: var(--border);
       border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0;
+    }
+
+    @media (min-width: 769px) {
+      .area-editor-overlay {
+        padding: 24px;
+        align-items: center;
+      }
+
+      .area-editor-panel {
+        height: min(92vh, 980px);
+        border-radius: 18px;
+        box-shadow: 0 18px 50px rgba(0,0,0,.24);
+        border: 1px solid var(--border);
+      }
     }
 
     /* ════════════════════════════════════════════════
@@ -431,8 +545,28 @@
       .custom-tag-row {
         flex-direction: column;
       }
+
       .custom-tag-row .emoji-input {
         max-width: none;
+      }
+
+      .area-editor-panel {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        padding: 16px 14px 24px;
+      }
+
+      .area-editor-toprow {
+        align-items: flex-start;
+      }
+
+      .area-editor-title {
+        font-size: 17px;
+      }
+
+      .area-editor-close {
+        min-width: 88px;
       }
     }
   </style>
@@ -476,7 +610,7 @@
     <div class="tip">
       <strong>Zones tekenen:</strong> Kies een kleur → klik "Wijk tekenen" of "Rechthoek" → teken op de kaart → dubbelklik om af te ronden.<br><br>
       <strong>Huis toevoegen:</strong> Klik 1× op de kaart (ook op een getekende wijk) om een huis-markering te plaatsen.<br><br>
-      <strong>Wijk-instellingen:</strong> Dubbelklik op een getekend gebied om de naam te bewerken of te verwijderen.<br><br>
+      <strong>Wijk-instellingen:</strong> Dubbelklik op een getekend gebied om de naam te bewerken of tags toe te voegen.<br><br>
       <strong>Huis verplaatsen:</strong> Klik en sleep een huis-markering naar de juiste plek.
     </div>
   </div>
@@ -578,8 +712,9 @@
 <script>
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  FIREBASE CONFIGURATIE                                           ║
-// ║  Zet hier jouw ECHTE config terug uit je oude werkende bestand.  ║
+// ║  Vul hieronder jouw eigen Firebase-projectgegevens in.           ║
 // ╚══════════════════════════════════════════════════════════════════╝
+const firebaseConfig = {
 const firebaseConfig = {
   apiKey: "AIzaSyChOTJn4_ifTBTAW30OULb8pCnp0TSOLTQ",
   authDomain: "house-557b5.firebaseapp.com",
@@ -822,68 +957,84 @@ function addCustomAreaTag(areaId) {
   if (!labelInput || !toneInput || !emojiInput) return;
 
   const label = labelInput.value.trim();
+  const tone = normalizeTone(toneInput.value);
+  const emoji = emojiInput.value.trim() || '🏷️';
+
   if (!label) {
-    alert('Vul eerst een tagnaam in.');
+    toast('Vul eerst een tagnaam in.');
     labelInput.focus();
     return;
   }
 
-  const tone = normalizeTone(toneInput.value);
-  const emoji = (emojiInput.value.trim() || '🏷️').slice(0, 2);
-  const current = getAreaTags(areaId);
   const id = slugifyTag(label);
+  if (!id) {
+    toast('Deze tagnaam is niet geldig.');
+    return;
+  }
 
-  const next = current.filter(tag => tag.id !== id);
-  next.push({ id, label, tone, emoji, preset: false });
+  const current = getAreaTags(areaId);
+  if (current.some(tag => tag.id === id)) {
+    toast('Deze tag bestaat al.');
+    return;
+  }
+
+  const next = [
+    ...current,
+    { id, label, tone, emoji, preset: false }
+  ];
 
   saveAreaTags(areaId, next);
 
   labelInput.value = '';
   emojiInput.value = '🏷️';
   toneInput.value = 'positive';
+  toast('Tag toegevoegd!');
 }
 
-function removeAreaTag(areaId, rawTagId) {
+function removeCustomAreaTag(areaId, rawTagId) {
   const tagId = slugifyTag(rawTagId);
   const current = getAreaTags(areaId);
-  saveAreaTags(areaId, current.filter(tag => tag.id !== tagId));
+  const next = current.filter(tag => tag.id !== tagId);
+  saveAreaTags(areaId, next);
 }
 
-function renderAreaTagChip(areaId, tag, isSelected) {
+function renderAreaTagChip(areaId, tag, selected) {
+  const safeLabel = escapeHtml(tag.label);
+  const safeEmoji = escapeHtml(tag.emoji || '🏷️');
   const toneClass = tag.tone === 'negative' ? 'is-negative' : 'is-positive';
-  const stateClass = isSelected ? 'is-selected' : 'is-unselected';
-  const action = isSelected
-    ? `removeAreaTag('${areaId}', '${tag.id}')`
-    : `toggleAreaPresetTag('${areaId}', '${tag.id}')`;
-  const affordance = isSelected
-    ? `<span class="tag-remove">✕</span>`
-    : `<span class="tag-plus">+</span>`;
+  const stateClass = selected ? 'is-selected' : 'is-unselected';
+
+  if (tag.preset) {
+    return `
+      <button
+        type="button"
+        class="area-tag-chip ${toneClass} ${stateClass}"
+        onclick="toggleAreaPresetTag('${areaId}', '${tag.id}')"
+      >
+        <span>${safeEmoji} ${safeLabel}</span>
+        <span class="${selected ? 'tag-remove' : 'tag-plus'}">${selected ? '−' : '+'}</span>
+      </button>
+    `;
+  }
 
   return `
-    <button type="button" class="area-tag-chip ${toneClass} ${stateClass}" onclick="${action}">
-      <span>${escapeHtml(tag.emoji)}</span>
-      <span>${escapeHtml(tag.label)}</span>
-      ${affordance}
+    <button
+      type="button"
+      class="area-tag-chip ${toneClass} is-selected"
+      onclick="removeCustomAreaTag('${areaId}', '${tag.id}')"
+    >
+      <span>${safeEmoji} ${safeLabel}</span>
+      <span class="tag-remove">−</span>
     </button>
   `;
 }
 
-function renderSidebarAreaTags(tags) {
-  const list = normalizeAreaTags(tags);
-  if (!list.length) return '';
-  return `
-    <div class="sidebar-area-tags">
-      ${list.map(tag => `
-        <span class="sidebar-area-tag ${tag.tone}">
-          ${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}
-        </span>
-      `).join('')}
-    </div>
-  `;
-}
+window.toggleAreaPresetTag = toggleAreaPresetTag;
+window.addCustomAreaTag = addCustomAreaTag;
+window.removeCustomAreaTag = removeCustomAreaTag;
 
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  AREA RENDERING & POPUPS                                         ║
+// ║  AREA RENDERING & FULLSCREEN EDITOR                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 function buildAreaPopupHtml(data) {
   const selectedTags = normalizeAreaTags(data.tags || []);
@@ -891,74 +1042,118 @@ function buildAreaPopupHtml(data) {
   const customTags = selectedTags.filter(tag => !tag.preset);
 
   return `
-    <div class="area-popup">
-      <strong style="font-size:13px">${COLORS[data.color].label}</strong><br><br>
+    <div class="area-editor-overlay">
+      <div class="area-editor-panel">
+        <div class="area-editor-header">
+          <div class="area-editor-toprow">
+            <div class="area-editor-title">Wijk bewerken</div>
+            <button type="button" class="area-editor-close" onclick="closeAreaEditor()">Sluiten</button>
+          </div>
 
-      <label style="font-size:11px;color:#666">Naam:</label>
-      <input id="ap-name-${data.id}" value="${escapeHtml(data.name || '')}" placeholder="Bijv. Archipelbuurt" /><br>
+          <div class="area-editor-actions">
+            <button class="save-btn" onclick="saveAreaName('${data.id}')">Naam opslaan</button>
+            <button class="del-btn" onclick="deleteArea('${data.id}')">Verwijderen</button>
+          </div>
 
-      <button class="save-btn" onclick="saveAreaName('${data.id}')">Opslaan</button>
-      <button class="del-btn"  onclick="deleteArea('${data.id}')">Verwijderen</button>
-
-      <div class="area-tags-section">
-        <div class="area-tags-title">Gekozen tags</div>
-        ${
-          selectedTags.length
-            ? `<div class="area-tags-selected">
-                ${selectedTags.map(tag => `
-                  <span class="sidebar-area-tag ${tag.tone}">
-                    ${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}
-                  </span>
-                `).join('')}
-              </div>`
-            : `<div class="area-tags-empty">Nog geen tags gekozen.</div>`
-        }
-      </div>
-
-      <div class="area-tags-section">
-        <div class="area-tags-title">Snelle tags</div>
-        <div class="area-tags-list">
-          ${PRESET_AREA_TAGS.map(tag => renderAreaTagChip(data.id, tag, selectedIds.has(tag.id))).join('')}
+          <div class="area-editor-subtitle" style="margin-top:10px;">
+            ${COLORS[data.color].label}<br>
+            Voeg tags toe, verwijder ze direct met opnieuw tikken en scroll door het hele scherm.
+          </div>
         </div>
-      </div>
 
-      <div class="area-tags-section">
-        <div class="area-tags-title">Eigen tag toevoegen</div>
-        <div class="custom-tag-box">
-          <div class="custom-tag-row">
-            <input id="ap-custom-label-${data.id}" type="text" placeholder="Bijv. dichtbij tram" />
-            <input id="ap-custom-emoji-${data.id}" class="emoji-input" type="text" value="🏷️" placeholder="🏷️" />
-          </div>
-          <div class="custom-tag-row">
-            <select id="ap-custom-tone-${data.id}">
-              <option value="positive">Positief</option>
-              <option value="negative">Negatief</option>
-            </select>
-            <button type="button" onclick="addCustomAreaTag('${data.id}')">Toevoegen</button>
+        <div class="area-popup">
+          <label style="font-size:11px;color:#666">Naam:</label>
+          <input id="ap-name-${data.id}" value="${escapeHtml(data.name || '')}" placeholder="Bijv. Archipelbuurt" />
+
+          <div class="area-tags-section">
+            <div class="area-tags-title">Gekozen tags</div>
+            ${
+              selectedTags.length
+                ? `<div class="area-tags-selected">
+                    ${selectedTags.map(tag => `
+                      <span class="sidebar-area-tag ${tag.tone}">
+                        ${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}
+                      </span>
+                    `).join('')}
+                  </div>`
+                : `<div class="area-tags-empty">Nog geen tags gekozen.</div>`
+            }
           </div>
 
-          ${
-            customTags.length
-              ? `<div class="area-tags-selected">
-                  ${customTags.map(tag => renderAreaTagChip(data.id, tag, true)).join('')}
-                </div>`
-              : `<div class="area-tags-empty">Nog geen eigen tags toegevoegd.</div>`
-          }
+          <div class="area-tags-section">
+            <div class="area-tags-title">Snelle tags</div>
+            <div class="area-tags-list">
+              ${PRESET_AREA_TAGS.map(tag => renderAreaTagChip(data.id, tag, selectedIds.has(tag.id))).join('')}
+            </div>
+          </div>
+
+          <div class="area-tags-section">
+            <div class="area-tags-title">Eigen tag toevoegen</div>
+            <div class="custom-tag-box">
+              <div class="custom-tag-row">
+                <input id="ap-custom-label-${data.id}" type="text" placeholder="Bijv. dichtbij tram" />
+                <input id="ap-custom-emoji-${data.id}" class="emoji-input" type="text" value="🏷️" placeholder="🏷️" />
+              </div>
+              <div class="custom-tag-row">
+                <select id="ap-custom-tone-${data.id}">
+                  <option value="positive">Positief</option>
+                  <option value="negative">Negatief</option>
+                </select>
+                <button type="button" onclick="addCustomAreaTag('${data.id}')">Toevoegen</button>
+              </div>
+
+              ${
+                customTags.length
+                  ? `<div class="area-tags-selected">
+                      ${customTags.map(tag => renderAreaTagChip(data.id, tag, true)).join('')}
+                    </div>`
+                  : `<div class="area-tags-empty">Nog geen eigen tags toegevoegd.</div>`
+              }
+            </div>
+          </div>
         </div>
       </div>
     </div>`;
 }
+
+function openAreaEditor(areaId, latlng) {
+  const cur = areaCache[areaId]?.data;
+  if (!cur) return;
+
+  L.popup({
+    className: 'area-editor-popup-wrap',
+    closeButton: false,
+    autoClose: true,
+    closeOnEscapeKey: true,
+    closeOnClick: false,
+    maxWidth: window.innerWidth,
+    minWidth: Math.min(window.innerWidth, 320)
+  })
+    .setLatLng(latlng || areaCache[areaId].layer.getBounds().getCenter())
+    .setContent(buildAreaPopupHtml(cur))
+    .openOn(map);
+}
+
+function closeAreaEditor() {
+  map.closePopup();
+}
+window.closeAreaEditor = closeAreaEditor;
 
 function renderArea(data) {
   if (areaCache[data.id]) {
     drawnItems.removeLayer(areaCache[data.id].layer);
   }
 
-  const col = COLORS[data.color]?.hex || '#999';
-  const latlngs = JSON.parse(data.latlngs);
+  const normalizedData = {
+    ...data,
+    tags: normalizeAreaTags(data.tags || [])
+  };
+
+  const col = COLORS[normalizedData.color]?.hex || '#999';
+  const latlngs = JSON.parse(normalizedData.latlngs);
 
   let layer;
-  if (data.type === 'rectangle') {
+  if (normalizedData.type === 'rectangle') {
     layer = L.rectangle(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
   } else {
     layer = L.polygon(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
@@ -980,33 +1175,26 @@ function renderArea(data) {
   layer.on('dblclick', e => {
     L.DomEvent.stopPropagation(e);
     if (_areaClickTimer) { clearTimeout(_areaClickTimer); _areaClickTimer = null; }
-    const cur = areaCache[data.id]?.data || data;
-    L.popup({ minWidth: 260, maxWidth: 340 })
-      .setLatLng(e.latlng)
-      .setContent(buildAreaPopupHtml(cur))
-      .openOn(map);
+    openAreaEditor(normalizedData.id, e.latlng);
   });
 
   drawnItems.addLayer(layer);
-  areaCache[data.id] = { data: { ...data, tags: normalizeAreaTags(data.tags || []) }, layer };
+  areaCache[normalizedData.id] = { data: normalizedData, layer };
   renderSidebarWijken();
 }
 
 window.saveAreaName = function(id) {
   const val = document.getElementById('ap-name-' + id)?.value || '';
   areasRef.child(id).update({ name: val });
-  map.closePopup();
   toast('Naam opgeslagen!');
 };
 
 window.deleteArea = function(id) {
+  if (!confirm('Weet je zeker dat je dit gebied wilt verwijderen?')) return;
   areasRef.child(id).remove();
+  map.closePopup();
   toast('Gebied verwijderd.');
 };
-
-window.toggleAreaPresetTag = toggleAreaPresetTag;
-window.addCustomAreaTag = addCustomAreaTag;
-window.removeAreaTag = removeAreaTag;
 
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HOUSE MARKERS                                                   ║
@@ -1079,7 +1267,7 @@ const mSave     = document.getElementById('m-save');
 const mDelete   = document.getElementById('m-delete');
 const mCancel   = document.getElementById('m-cancel');
 const starEls   = document.querySelectorAll('#star-rating .star');
-let modalRating = 0;
+let   modalRating = 0;
 
 function setStars(n) {
   modalRating = n;
@@ -1160,6 +1348,7 @@ sidebarToggle.addEventListener('click', () => {
 
 window.addEventListener('resize', updateToggleIcon);
 
+// tabs
 document.querySelectorAll('.stab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
@@ -1169,25 +1358,42 @@ document.querySelectorAll('.stab').forEach(tab => {
   });
 });
 
+// sort
 document.getElementById('sort-huizen').addEventListener('change', renderSidebarHuizen);
+
+// search
 document.getElementById('house-search').addEventListener('input', renderSidebarHuizen);
 
 function renderSidebarWijken() {
   const container = document.getElementById('list-wijken');
   const areas = Object.values(areaCache);
+
   if (!areas.length) {
     container.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nog geen wijken getekend.</p>';
     return;
   }
+
   container.innerHTML = areas.map(({ data }) => {
     const col = COLORS[data.color]?.hex || '#999';
     const name = data.name || '<em style="color:var(--muted)">Naamloos</em>';
+    const tags = normalizeAreaTags(data.tags || []);
+    const tagHtml = tags.length
+      ? `<div class="sidebar-area-tags">
+          ${tags.slice(0, 4).map(tag => `
+            <span class="sidebar-area-tag ${tag.tone}">
+              ${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}
+            </span>
+          `).join('')}
+          ${tags.length > 4 ? `<span class="sidebar-area-tag positive">+${tags.length - 4}</span>` : ''}
+        </div>`
+      : '';
+
     return `<div class="list-item" onclick="panToArea('${data.id}')">
       <div class="dot" style="background:${col}"></div>
       <div class="info">
         <div class="name">${name}</div>
         <div class="sub">${COLORS[data.color]?.label || ''}</div>
-        ${renderSidebarAreaTags(data.tags)}
+        ${tagHtml}
       </div>
     </div>`;
   }).join('');
@@ -1247,43 +1453,4 @@ window.panToHouse = function(id) {
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  FIREBASE REALTIME LISTENERS                                     ║
 // ╚══════════════════════════════════════════════════════════════════╝
-areasRef.on('child_added',   snap => { renderArea(snap.val()); });
-areasRef.on('child_changed', snap => { renderArea(snap.val()); });
-areasRef.on('child_removed', snap => {
-  const val = snap.val();
-  const id = val?.id || snap.key;
-  if (areaCache[id]) {
-    drawnItems.removeLayer(areaCache[id].layer);
-    delete areaCache[id];
-    renderSidebarWijken();
-  }
-});
 
-housesRef.on('child_added',   snap => { renderHouse(snap.val()); });
-housesRef.on('child_changed', snap => {
-  renderHouse(snap.val());
-  if (modalHouseId === snap.val().id && overlay.classList.contains('open')) {
-    mTitle.textContent = snap.val().name || 'Huis bewerken';
-  }
-});
-housesRef.on('child_removed', snap => {
-  const val = snap.val();
-  const id = val?.id || snap.key;
-  if (houseCache[id]) {
-    map.removeLayer(houseCache[id].marker);
-    delete houseCache[id];
-    renderSidebarHuizen();
-  }
-});
-
-const observer = new MutationObserver(() => {
-  setTimeout(() => map.invalidateSize(), 260);
-});
-observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-
-renderSidebarWijken();
-renderSidebarHuizen();
-</script>
-
-</body>
-</html>
