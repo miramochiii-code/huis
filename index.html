@@ -209,7 +209,7 @@
       padding: 24px;
       pointer-events: auto;
     }
-    .area-overlay.open { display: flex; }
+    .area-overlay.open { display: flex !important; }
 
     .area-panel {
       width: min(760px, calc(100vw - var(--sidebar-w) - 48px));
@@ -479,6 +479,59 @@
       cursor: crosshair;
     }
 
+    .mobile-edit-bar {
+      display: none;
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 16px;
+      z-index: 6500;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 10px 32px rgba(0,0,0,.18);
+      padding: 12px;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .mobile-edit-bar.open { display: flex; }
+
+    .mobile-edit-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mobile-edit-sub {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .mobile-edit-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mobile-edit-actions button {
+      flex: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mobile-save-btn {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .mobile-cancel-btn {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
     #toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
       background: #333; color: #fff; padding: 8px 18px; border-radius: 20px;
@@ -565,7 +618,7 @@
       #legend h3 { font-size: 10px; }
       .leg-dot { width: 11px; height: 11px; }
 
-      #toast { bottom: 90px; }
+      #toast { bottom: 110px; }
 
       .custom-tag-row { flex-direction: column; }
       .custom-tag-row .emoji-input { max-width: none; }
@@ -713,7 +766,7 @@
   </div>
 </div>
 
-<div id="area-overlay" class="area-overlay">
+<div id="area-overlay" class="area-overlay" aria-hidden="true">
   <div id="area-panel" class="area-panel" onclick="event.stopPropagation()">
     <div class="area-editor-header">
       <div class="area-editor-toprow">
@@ -744,11 +797,6 @@
 
       <button id="area-save-geometry-btn" class="save-btn area-main-action" style="display:none">
         <span>Bewerking opslaan</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-          <polyline points="17 21 17 13 7 13 7 21"></polyline>
-          <polyline points="7 3 7 8 15 8"></polyline>
-        </svg>
       </button>
 
       <button id="area-cancel-geometry-btn" class="cancel-btn area-main-action" style="display:none">
@@ -788,16 +836,18 @@
       <div class="area-delete-wrap">
         <button id="area-delete-btn" class="area-delete-btn">
           <span>Gebied verwijderen</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-            <path d="M10 11v6"></path>
-            <path d="M14 11v6"></path>
-            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
-          </svg>
         </button>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="mobile-edit-bar" class="mobile-edit-bar">
+  <div class="mobile-edit-title">Gebied bewerken</div>
+  <div class="mobile-edit-sub">Sleep de zichtbare punten van het gebied. Sla daarna op of annuleer.</div>
+  <div class="mobile-edit-actions">
+    <button id="mobile-cancel-edit-btn" class="mobile-cancel-btn">Annuleren</button>
+    <button id="mobile-save-edit-btn" class="mobile-save-btn">Opslaan</button>
   </div>
 </div>
 
@@ -1130,6 +1180,19 @@ const areaCustomTagsEmpty = document.getElementById('area-custom-tags-empty');
 const areaDeleteBtn = document.getElementById('area-delete-btn');
 const areaCloseBtn = document.getElementById('area-close-btn');
 const areaAddCustomTagBtn = document.getElementById('area-add-custom-tag-btn');
+const mobileEditBar = document.getElementById('mobile-edit-bar');
+const mobileSaveEditBtn = document.getElementById('mobile-save-edit-btn');
+const mobileCancelEditBtn = document.getElementById('mobile-cancel-edit-btn');
+
+function setAreaOverlayOpen(open) {
+  areaOverlay.classList.toggle('open', open);
+  areaOverlay.setAttribute('aria-hidden', open ? 'false' : 'true');
+  areaOverlay.style.display = open ? 'flex' : 'none';
+}
+
+function setMobileEditBarOpen(open) {
+  mobileEditBar.classList.toggle('open', open);
+}
 
 function syncAreaNameSaveButton() {
   if (!activeAreaId) return;
@@ -1150,10 +1213,10 @@ function renderAreaEditor() {
   areaNameInput.value = data.name || '';
   syncAreaNameSaveButton();
 
-  areaEditStatus.classList.toggle('show', activeAreaEditId === activeAreaId);
+  areaEditStatus.classList.toggle('show', activeAreaEditId === activeAreaId && !isMobile());
   areaEditGeometryBtn.style.display = activeAreaEditId === activeAreaId ? 'none' : '';
-  areaSaveGeometryBtn.style.display = activeAreaEditId === activeAreaId ? '' : 'none';
-  areaCancelGeometryBtn.style.display = activeAreaEditId === activeAreaId ? '' : 'none';
+  areaSaveGeometryBtn.style.display = activeAreaEditId === activeAreaId && !isMobile() ? '' : 'none';
+  areaCancelGeometryBtn.style.display = activeAreaEditId === activeAreaId && !isMobile() ? '' : 'none';
 
   if (selectedTags.length) {
     areaSelectedTags.innerHTML = selectedTags.map(tag => `
@@ -1183,19 +1246,20 @@ function openAreaEditor(areaId) {
   if (!entry) return;
   activeAreaId = areaId;
   renderAreaEditor();
-  areaOverlay.classList.add('open');
+  setAreaOverlayOpen(true);
 }
 
 function closeAreaEditor(options = {}) {
   const keepEditMode = !!options.keepEditMode;
-  areaOverlay.classList.remove('open');
+  setAreaOverlayOpen(false);
   if (!keepEditMode) {
     stopAreaGeometryEdit(false);
   }
 }
 
 function fullyCloseAreaEditor() {
-  areaOverlay.classList.remove('open');
+  setAreaOverlayOpen(false);
+  setMobileEditBarOpen(false);
   stopAreaGeometryEdit(false);
   activeAreaId = null;
 }
@@ -1244,6 +1308,29 @@ function captureAreaLatLngs(layer, type) {
   return raw;
 }
 
+function enableLayerEditHandles(layer, type) {
+  try {
+    if (type === 'rectangle') {
+      if (!layer.editing) layer.editing = new L.Edit.Rectangle(layer);
+      layer.editing.enable();
+      return layer.editing;
+    }
+
+    if (!layer.editing) layer.editing = new L.Edit.Poly(layer);
+    layer.editing.enable();
+
+    if (layer.editing && layer.editing._verticesHandlers) {
+      layer.editing._verticesHandlers.forEach(handler => {
+        if (handler && handler.addHooks) handler.addHooks();
+      });
+    }
+
+    return layer.editing;
+  } catch (e) {
+    return null;
+  }
+}
+
 function stopAreaGeometryEdit(restoreOriginal = false) {
   if (!activeAreaEditId) return;
 
@@ -1273,6 +1360,7 @@ function stopAreaGeometryEdit(restoreOriginal = false) {
   activeAreaEditId = null;
   activeAreaEditorMode = false;
   map.getContainer().classList.remove('area-geometry-editing');
+  setMobileEditBarOpen(false);
 }
 
 function startAreaGeometryEdit(id) {
@@ -1289,33 +1377,26 @@ function startAreaGeometryEdit(id) {
   const data = entry.data;
   entry.originalLatLngsBeforeEdit = JSON.stringify(captureAreaLatLngs(layer, data.type));
 
-  try {
-    if (data.type === 'rectangle') {
-      if (!layer.editing) layer.editing = new L.Edit.Rectangle(layer);
-      entry.editorInstance = layer.editing;
-      entry.editorInstance.enable();
-    } else {
-      if (!layer.editing) layer.editing = new L.Edit.Poly(layer);
-      entry.editorInstance = layer.editing;
-      entry.editorInstance.enable();
-    }
-  } catch (e) {
+  const editor = enableLayerEditHandles(layer, data.type);
+  if (!editor) {
     toast('Bewerken van dit gebied lukte niet.');
     return;
   }
 
+  entry.editorInstance = editor;
   activeAreaEditId = id;
   activeAreaEditorMode = true;
   suppressNextMapClickUntil = Date.now() + 500;
   map.getContainer().classList.add('area-geometry-editing');
 
   try {
-    map.fitBounds(layer.getBounds(), { padding: isMobile() ? [30, 30] : [60, 60] });
+    map.fitBounds(layer.getBounds(), { padding: isMobile() ? [50, 50] : [60, 60] });
   } catch (e) {}
 
   if (isMobile()) {
     closeAreaEditor({ keepEditMode: true });
-    toast('Gebied bewerken staat aan. Pas nu de punten op de kaart aan.');
+    setMobileEditBarOpen(true);
+    toast('Sleep nu de punten van het gebied.');
   } else {
     renderAreaEditor();
     toast('Sleep nu de punten van het gebied.');
@@ -1362,6 +1443,16 @@ areaSaveGeometryBtn.addEventListener('click', () => {
 });
 
 areaCancelGeometryBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  cancelAreaGeometryEdit(activeAreaId);
+});
+
+mobileSaveEditBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  saveAreaGeometry(activeAreaId);
+});
+
+mobileCancelEditBtn.addEventListener('click', () => {
   if (!activeAreaId) return;
   cancelAreaGeometryEdit(activeAreaId);
 });
@@ -1591,6 +1682,7 @@ sidebarToggle.addEventListener('click', () => {
 window.addEventListener('resize', () => {
   updateToggleIcon();
   syncSidebarBodyClass();
+  if (!isMobile()) setMobileEditBarOpen(false);
 });
 
 document.querySelectorAll('.stab').forEach(tab => {
