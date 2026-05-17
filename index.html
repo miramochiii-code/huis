@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Huis Zoeken Den Haag</title>
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- Leaflet.draw CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
 
   <style>
@@ -25,13 +23,16 @@
       --border: #dde1e7;
       --text: #1a1d23;
       --muted: #6b7280;
-      --success: #2e7d32;
       --warning-bg: #fff8e1;
     }
 
-    html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text); }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: var(--text);
+    }
 
-    /* ── TOOLBAR ── */
     #toolbar {
       position: fixed; top: 0; left: 0; right: 0; height: var(--toolbar-h);
       background: var(--card); border-bottom: 1px solid var(--border);
@@ -61,9 +62,7 @@
     .tb-btn:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
     .tb-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    #draw-mode-label {
-      font-size: 12px; color: var(--muted); white-space: nowrap;
-    }
+    #draw-mode-label { font-size: 12px; color: var(--muted); white-space: nowrap; }
 
     .tooltip-wrap { position: relative; }
     .tooltip-wrap .tip {
@@ -78,7 +77,6 @@
       z-index: 1;
     }
 
-    /* ── SIDEBAR ── */
     #sidebar {
       position: fixed; top: var(--toolbar-h); right: 0; width: var(--sidebar-w);
       bottom: 0; background: var(--card); border-left: 1px solid var(--border);
@@ -106,9 +104,7 @@
     }
     #house-search:focus { outline: none; border-color: var(--accent); }
 
-    #sidebar-tabs {
-      display: flex; border-bottom: 1px solid var(--border);
-    }
+    #sidebar-tabs { display: flex; border-bottom: 1px solid var(--border); }
     .stab {
       flex: 1; padding: 10px 0; text-align: center; font-size: 13px; font-weight: 600;
       cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent;
@@ -141,7 +137,6 @@
     .list-item .sub { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .stars-sm { color: #f59e0b; font-size: 12px; letter-spacing: 1px; }
 
-    /* ── LEGEND ── */
     #legend {
       position: fixed; bottom: 20px; left: 20px; background: var(--card);
       border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px;
@@ -151,12 +146,12 @@
     .leg-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
     .leg-dot { width: 14px; height: 14px; border-radius: 3px; opacity: .85; }
 
-    /* ── MODAL ── */
     #modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
       z-index: 3000; align-items: center; justify-content: center;
     }
     #modal-overlay.open { display: flex; }
+
     #modal {
       background: var(--card); border-radius: 16px; padding: 24px;
       width: 380px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,.2);
@@ -185,19 +180,20 @@
       cursor: pointer; transition: opacity .15s;
     }
     .btn-primary:hover { opacity: .88; }
+
     .btn-danger {
       padding: 10px 16px; border-radius: 8px; border: none;
       background: #fee2e2; color: var(--rood); font-weight: 700; font-size: 14px;
       cursor: pointer; transition: background .15s;
     }
     .btn-danger:hover { background: #fecaca; }
+
     .btn-cancel {
       padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border);
       background: var(--bg); color: var(--text); font-weight: 600; font-size: 14px;
       cursor: pointer;
     }
 
-    /* area editor */
     .area-popup input,
     .area-popup select {
       width: 100%;
@@ -221,24 +217,22 @@
     }
 
     .area-popup .save-btn { background: var(--accent); color: #fff; }
-    .area-popup .del-btn  { background: var(--rood); color: #fff; }
     .area-popup .edit-btn { background: #e3f2fd; color: var(--accent); }
     .area-popup .cancel-btn { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
 
     .area-editor-overlay {
       position: fixed;
-      inset: 0;
       z-index: 6000;
       background: rgba(17, 24, 39, 0.48);
       display: flex;
-      align-items: stretch;
+      align-items: center;
       justify-content: center;
-      padding: 0;
+      padding: 24px;
     }
 
     .area-editor-panel {
-      width: min(760px, 100vw);
-      height: 100vh;
+      width: min(760px, calc(100vw - 48px));
+      max-width: 100%;
       background: var(--card);
       color: var(--text);
       overflow-y: auto;
@@ -246,6 +240,10 @@
       padding: 18px 16px 28px;
       display: flex;
       flex-direction: column;
+      max-height: calc(100vh - 48px);
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.24);
+      border: 1px solid var(--border);
     }
 
     .area-editor-header {
@@ -263,12 +261,20 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .area-editor-title {
       font-size: 20px;
       font-weight: 700;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .area-editor-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
     .area-editor-close {
@@ -280,15 +286,11 @@
       cursor: pointer;
       font-size: 13px;
       font-weight: 700;
-    }
-
-    .area-editor-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
+      flex-shrink: 0;
     }
 
     .area-edit-status {
+      display: none;
       margin-top: 12px;
       padding: 12px;
       border-radius: 12px;
@@ -297,6 +299,8 @@
       font-size: 12px;
       line-height: 1.5;
     }
+
+    .area-edit-status.show { display: block; }
 
     .area-edit-status strong {
       display: block;
@@ -313,9 +317,7 @@
       margin-top: 14px;
     }
 
-    .area-main-action svg {
-      flex-shrink: 0;
-    }
+    .area-main-action svg { flex-shrink: 0; }
 
     .area-name-save {
       display: none;
@@ -323,139 +325,7 @@
       margin-top: 8px;
       margin-bottom: 4px;
     }
-
-    .area-name-save.show {
-      display: block;
-    }
-
-    .area-tags-section {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-    }
-
-    .area-tags-title {
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-
-    .area-tags-list,
-    .area-tags-selected {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .area-tag-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 11px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 1;
-      background: #fff;
-    }
-
-    .area-tag-chip.is-positive {
-      background: #e8f5e9;
-      color: #1b5e20;
-      border-color: #b7dfba;
-    }
-
-    .area-tag-chip.is-negative {
-      background: #ffebee;
-      color: #b71c1c;
-      border-color: #ffc9cf;
-    }
-
-    .area-tag-chip.is-selected {
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,.08);
-    }
-
-    .area-tag-chip.is-unselected {
-      opacity: .92;
-    }
-
-    .area-tag-chip .tag-plus,
-    .area-tag-chip .tag-remove {
-      font-weight: 800;
-    }
-
-    .area-tags-empty {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .custom-tag-box {
-      margin-top: 10px;
-      padding: 12px;
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-      background: #fafbfc;
-    }
-
-    .custom-tag-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .custom-tag-row input,
-    .custom-tag-row select {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .custom-tag-row .emoji-input {
-      max-width: 72px;
-      text-align: center;
-    }
-
-    .custom-tag-row button {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .sidebar-area-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .sidebar-area-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 999px;
-    }
-
-    .sidebar-area-tag.positive {
-      background: #e8f5e9;
-      color: #1b5e20;
-    }
-
-    .sidebar-area-tag.negative {
-      background: #ffebee;
-      color: #b71c1c;
-    }
+    .area-name-save.show { display: block; }
 
     .area-delete-wrap {
       margin-top: 28px;
@@ -473,13 +343,31 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    .area-delete-btn:hover {
-      opacity: .92;
+    .area-delete-btn:hover { opacity: .92; }
+
+    .leaflet-popup.area-editor-host-popup .leaflet-popup-content-wrapper,
+    .leaflet-popup.area-editor-host-popup .leaflet-popup-tip-container {
+      background: transparent;
+      box-shadow: none;
     }
 
-    .house-circle-icon { }
+    .leaflet-popup.area-editor-host-popup .leaflet-popup-content {
+      margin: 0;
+      width: auto !important;
+      line-height: 1;
+    }
+
+    .leaflet-container.area-geometry-editing {
+      cursor: crosshair;
+    }
+
+    .leaflet-draw-toolbar a { background-color: var(--card) !important; }
 
     #toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
@@ -489,8 +377,6 @@
     }
     #toast.show { opacity: 1; }
 
-    .leaflet-draw-toolbar a { background-color: var(--card) !important; }
-
     #sidebar-body::-webkit-scrollbar,
     .area-editor-panel::-webkit-scrollbar { width: 6px; }
     #sidebar-body::-webkit-scrollbar-thumb,
@@ -499,20 +385,6 @@
     #sidebar-handle {
       display: none; width: 40px; height: 4px; background: var(--border);
       border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0;
-    }
-
-    @media (min-width: 769px) {
-      .area-editor-overlay {
-        padding: 24px;
-        align-items: center;
-      }
-
-      .area-editor-panel {
-        height: min(92vh, 980px);
-        border-radius: 18px;
-        box-shadow: 0 18px 50px rgba(0,0,0,.24);
-        border: 1px solid var(--border);
-      }
     }
 
     @media (max-width: 768px) {
@@ -546,9 +418,7 @@
         transform: translateY(0) !important;
         transition: transform .28s ease;
       }
-      #sidebar.collapsed {
-        transform: translateY(100%) !important;
-      }
+      #sidebar.collapsed { transform: translateY(100%) !important; }
 
       #sidebar-toggle {
         top: auto !important;
@@ -585,32 +455,27 @@
 
       #toast { bottom: 90px; }
 
-      .custom-tag-row {
-        flex-direction: column;
-      }
-
-      .custom-tag-row .emoji-input {
-        max-width: none;
+      .area-editor-overlay {
+        inset: 0 !important;
+        padding: 0 !important;
+        align-items: stretch !important;
+        justify-content: stretch !important;
       }
 
       .area-editor-panel {
-        width: 100vw;
-        height: 100vh;
-        border-radius: 0;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
         padding: 16px 14px 24px;
       }
 
-      .area-editor-toprow {
-        align-items: flex-start;
-      }
-
-      .area-editor-title {
-        font-size: 18px;
-      }
-
-      .area-editor-close {
-        min-width: 88px;
-      }
+      .area-editor-toprow { align-items: flex-start; }
+      .area-editor-title { font-size: 18px; }
+      .area-editor-close { min-width: 88px; }
     }
   </style>
 </head>
@@ -652,7 +517,7 @@
     <div class="tip">
       <strong>Gebieden tekenen:</strong> Kies een kleur → klik "Gebied tekenen" of "Rechthoek" → teken op de kaart → dubbelklik om af te ronden.<br><br>
       <strong>Huis toevoegen:</strong> Klik 1× op de kaart (ook op een getekend gebied) om een huis-markering te plaatsen.<br><br>
-      <strong>Gebied-instellingen:</strong> Dubbelklik op een getekend gebied om de naam te bewerken of te verwijderen.<br><br>
+      <strong>Gebied-instellingen:</strong> Dubbelklik op een getekend gebied om het gebied te bewerken of te verwijderen.<br><br>
       <strong>Huis verplaatsen:</strong> Klik en sleep een huis-markering naar de juiste plek.
     </div>
   </div>
@@ -777,64 +642,13 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-function slugifyTag(value) {
-  return String(value || '')
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9\-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
-
-function normalizeTone(value) {
-  return value === 'negative' ? 'negative' : 'positive';
-}
-
-function normalizeAreaTags(tags) {
-  if (!Array.isArray(tags)) return [];
-  const seen = new Set();
-
-  return tags.map(tag => {
-    if (!tag || typeof tag !== 'object') return null;
-    const label = String(tag.label || '').trim();
-    if (!label) return null;
-
-    const id = slugifyTag(tag.id || label);
-    if (!id || seen.has(id)) return null;
-    seen.add(id);
-
-    return {
-      id,
-      label,
-      tone: normalizeTone(tag.tone),
-      emoji: String(tag.emoji || '🏷️').trim() || '🏷️',
-      preset: !!tag.preset
-    };
-  }).filter(Boolean);
-}
-
-const PRESET_AREA_TAGS = [
-  { id: 'kindvriendelijk', label: 'kindvriendelijk', tone: 'positive', emoji: '🧒', preset: true },
-  { id: 'winkels-10-min-lopen', label: 'winkels 10 min lopen', tone: 'positive', emoji: '🛍️', preset: true },
-  { id: 'basisschool', label: 'basisschool', tone: 'positive', emoji: '🏫', preset: true },
-  { id: 'kinderopvang', label: 'kinderopvang', tone: 'positive', emoji: '🍼', preset: true },
-  { id: 'park', label: 'park', tone: 'positive', emoji: '🌳', preset: true },
-  { id: 'speeltuin', label: 'speeltuin', tone: 'positive', emoji: '🛝', preset: true },
-  { id: 'veel-parkeer', label: 'veel parkeer', tone: 'positive', emoji: '🅿️', preset: true },
-  { id: 'rustig', label: 'rustig', tone: 'positive', emoji: '😌', preset: true },
-  { id: 'middel-parkeer', label: 'middel parkeer', tone: 'negative', emoji: '🚗', preset: true },
-  { id: 'weinig-parkeer', label: 'weinig parkeer', tone: 'negative', emoji: '🚫', preset: true },
-  { id: 'sociaal-in-de-buurt', label: 'sociaal in de buurt', tone: 'negative', emoji: '📢', preset: true }
-];
-
 const COLORS = {
   groen: { hex: '#4CAF50', label: 'Groen – Hier willen we wonen' },
   geel:  { hex: '#FFC107', label: 'Geel – Twijfel (ligt aan huis)' },
   rood:  { hex: '#F44336', label: 'Rood – Hier willen we niet wonen' },
 };
 
-const map = L.map('map', { zoomControl: true }).setView([52.0705, 4.3007], 13);
+const map = L.map('map', { zoomControl: true, doubleClickZoom: false }).setView([52.0705, 4.3007], 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -851,6 +665,12 @@ const areaCache  = {};
 const houseCache = {};
 
 let modalHouseId = null;
+
+let activeAreaPopup = null;
+let activeAreaPopupId = null;
+let activeAreaEditId = null;
+let activeAreaEditorMode = false;
+let suppressNextMapClickUntil = 0;
 
 document.querySelectorAll('.color-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -876,6 +696,7 @@ function stopDrawing() {
 
 function startDrawing(mode) {
   stopDrawing();
+  stopAreaGeometryEdit(false);
   currentDrawMode = mode;
   const col = COLORS[selectedColor].hex;
 
@@ -918,8 +739,7 @@ map.on(L.Draw.Event.CREATED, e => {
     color: selectedColor,
     name: '',
     type: currentDrawMode === 'rectangle' ? 'rectangle' : 'polygon',
-    latlngs: JSON.stringify(latlngs),
-    tags: []
+    latlngs: JSON.stringify(latlngs)
   };
 
   stopDrawing();
@@ -927,126 +747,98 @@ map.on(L.Draw.Event.CREATED, e => {
   toast('Gebied opgeslagen!');
 });
 
-function getAreaTags(areaId) {
-  return normalizeAreaTags(areaCache[areaId]?.data?.tags || []);
+function isMobile() {
+  return window.innerWidth <= 768;
 }
 
-function saveAreaTags(areaId, tags) {
-  areasRef.child(areaId).update({ tags: normalizeAreaTags(tags) });
-}
+function getVisibleMapRect() {
+  const mapEl = document.getElementById('map');
+  const rect = mapEl.getBoundingClientRect();
 
-function toggleAreaPresetTag(areaId, rawTagId) {
-  const tagId = slugifyTag(rawTagId);
-  const preset = PRESET_AREA_TAGS.find(tag => tag.id === tagId);
-  if (!preset) return;
-
-  const current = getAreaTags(areaId);
-  const exists = current.some(tag => tag.id === tagId);
-  const next = exists
-    ? current.filter(tag => tag.id !== tagId)
-    : [...current, { ...preset }];
-
-  saveAreaTags(areaId, next);
-}
-
-function addCustomAreaTag(areaId) {
-  const labelInput = document.getElementById(`ap-custom-label-${areaId}`);
-  const toneInput = document.getElementById(`ap-custom-tone-${areaId}`);
-  const emojiInput = document.getElementById(`ap-custom-emoji-${areaId}`);
-
-  if (!labelInput || !toneInput || !emojiInput) return;
-
-  const label = labelInput.value.trim();
-  const tone = normalizeTone(toneInput.value);
-  const emoji = emojiInput.value.trim() || '🏷️';
-
-  if (!label) {
-    toast('Vul eerst een tagnaam in.');
-    labelInput.focus();
-    return;
+  if (isMobile()) {
+    return rect;
   }
 
-  const id = slugifyTag(label);
-  if (!id) {
-    toast('Deze tagnaam is niet geldig.');
-    return;
+  const sidebarEl = document.getElementById('sidebar');
+  const sidebarOpen = !sidebarEl.classList.contains('collapsed');
+  let rightInset = 0;
+
+  if (sidebarOpen) {
+    const sidebarRect = sidebarEl.getBoundingClientRect();
+    const overlap = Math.max(0, rect.right - sidebarRect.left);
+    rightInset = overlap;
   }
 
-  const current = getAreaTags(areaId);
-  if (current.some(tag => tag.id === id)) {
-    toast('Deze tag bestaat al.');
-    return;
-  }
-
-  const next = [...current, { id, label, tone, emoji, preset: false }];
-  saveAreaTags(areaId, next);
-
-  labelInput.value = '';
-  emojiInput.value = '🏷️';
-  toneInput.value = 'positive';
-  toast('Tag toegevoegd!');
+  return {
+    left: rect.left,
+    top: rect.top,
+    width: Math.max(0, rect.width - rightInset),
+    height: rect.height,
+    right: rect.right - rightInset,
+    bottom: rect.bottom
+  };
 }
 
-function removeCustomAreaTag(areaId, rawTagId) {
-  const tagId = slugifyTag(rawTagId);
-  const current = getAreaTags(areaId);
-  const next = current.filter(tag => tag.id !== tagId);
-  saveAreaTags(areaId, next);
+function getAreaEditorTitle(data) {
+  const name = String(data?.name || '').trim();
+  return name || 'Gebied';
 }
-
-function renderAreaTagChip(areaId, tag, selected) {
-  const safeLabel = escapeHtml(tag.label);
-  const safeEmoji = escapeHtml(tag.emoji || '🏷️');
-  const toneClass = tag.tone === 'negative' ? 'is-negative' : 'is-positive';
-  const stateClass = selected ? 'is-selected' : 'is-unselected';
-
-  if (tag.preset) {
-    return `
-      <button
-        type="button"
-        class="area-tag-chip ${toneClass} ${stateClass}"
-        onclick="toggleAreaPresetTag('${areaId}', '${tag.id}')"
-      >
-        <span>${safeEmoji} ${safeLabel}</span>
-        <span class="${selected ? 'tag-remove' : 'tag-plus'}">${selected ? '−' : '+'}</span>
-      </button>
-    `;
-  }
-
-  return `
-    <button
-      type="button"
-      class="area-tag-chip ${toneClass} is-selected"
-      onclick="removeCustomAreaTag('${areaId}', '${tag.id}')"
-    >
-      <span>${safeEmoji} ${safeLabel}</span>
-      <span class="tag-remove">−</span>
-    </button>
-  `;
-}
-
-window.toggleAreaPresetTag = toggleAreaPresetTag;
-window.addCustomAreaTag = addCustomAreaTag;
-window.removeCustomAreaTag = removeCustomAreaTag;
 
 function buildAreaPopupHtml(data) {
-  const selectedTags = normalizeAreaTags(data.tags || []);
-  const selectedIds = new Set(selectedTags.map(tag => tag.id));
-  const customTags = selectedTags.filter(tag => !tag.preset);
+  const title = escapeHtml(getAreaEditorTitle(data));
+  const statusText = activeAreaEditId === data.id
+    ? `
+      <div id="ap-status-${data.id}" class="area-edit-status show">
+        <strong>Gebied bewerken staat aan</strong>
+        Sleep de zichtbare punten of hoekpunten op de kaart. Klik daarna op “Bewerking opslaan”.
+      </div>
+    `
+    : `
+      <div id="ap-status-${data.id}" class="area-edit-status">
+        <strong>Gebied bewerken</strong>
+        Sleep de punten of hoekpunten op de kaart nadat je op “Gebied bewerken” hebt gedrukt.
+      </div>
+    `;
+
+  const actionButton = activeAreaEditId === data.id
+    ? `
+      <button class="save-btn area-main-action" onclick="saveAreaGeometry('${data.id}')">
+        <span>Bewerking opslaan</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+      </button>
+      <button class="cancel-btn area-main-action" onclick="cancelAreaGeometryEdit('${data.id}')">
+        <span>Bewerken annuleren</span>
+      </button>
+    `
+    : `
+      <button class="edit-btn area-main-action" onclick="startAreaGeometryEdit('${data.id}')">
+        <span>Gebied bewerken</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+        </svg>
+      </button>
+    `;
 
   return `
-    <div class="area-editor-overlay">
-      <div class="area-editor-panel">
+    <div class="area-editor-overlay" onclick="handleAreaOverlayClick(event)">
+      <div class="area-editor-panel" onclick="event.stopPropagation()">
         <div class="area-editor-header">
           <div class="area-editor-toprow">
-            <div class="area-editor-title">Gebied</div>
+            <div class="area-editor-title">${title}</div>
             <button type="button" class="area-editor-close" onclick="closeAreaEditor()">Sluiten</button>
           </div>
 
           <div class="area-editor-subtitle">
-            ${COLORS[data.color].label}<br>
-            Wijzig de naam of tags van dit gebied.
+            ${escapeHtml(COLORS[data.color]?.label || '')}<br>
+            Wijzig de naam of bewerk de vorm van dit gebied.
           </div>
+
+          ${statusText}
         </div>
 
         <div class="area-popup">
@@ -1066,87 +858,100 @@ function buildAreaPopupHtml(data) {
             Naam opslaan
           </button>
 
-          <button class="edit-btn area-main-action" onclick="startAreaGeometryEdit('${data.id}')">
-            <span>Gebied bewerken</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 20h9"/>
-              <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-            </svg>
-          </button>
-
-          <div class="area-tags-section">
-            <div class="area-tags-title">Gekozen tags</div>
-            ${
-              selectedTags.length
-                ? `<div class="area-tags-selected">
-                    ${selectedTags.map(tag => `
-                      <span class="sidebar-area-tag ${tag.tone}">
-                        ${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}
-                      </span>
-                    `).join('')}
-                  </div>`
-                : `<div class="area-tags-empty">Nog geen tags gekozen.</div>`
-            }
-          </div>
-
-          <div class="area-tags-section">
-            <div class="area-tags-title">Snelle tags</div>
-            <div class="area-tags-list">
-              ${PRESET_AREA_TAGS.map(tag => renderAreaTagChip(data.id, tag, selectedIds.has(tag.id))).join('')}
-            </div>
-          </div>
-
-          <div class="area-tags-section">
-            <div class="area-tags-title">Eigen tag toevoegen</div>
-            <div class="custom-tag-box">
-              <div class="custom-tag-row">
-                <input id="ap-custom-label-${data.id}" type="text" placeholder="Bijv. dichtbij tram" />
-                <input id="ap-custom-emoji-${data.id}" class="emoji-input" type="text" value="🏷️" placeholder="🏷️" />
-              </div>
-              <div class="custom-tag-row">
-                <select id="ap-custom-tone-${data.id}">
-                  <option value="positive">Positief</option>
-                  <option value="negative">Negatief</option>
-                </select>
-                <button type="button" onclick="addCustomAreaTag('${data.id}')">Toevoegen</button>
-              </div>
-
-              ${
-                customTags.length
-                  ? `<div class="area-tags-selected">
-                      ${customTags.map(tag => renderAreaTagChip(data.id, tag, true)).join('')}
-                    </div>`
-                  : `<div class="area-tags-empty">Nog geen eigen tags toegevoegd.</div>`
-              }
-            </div>
-          </div>
+          ${actionButton}
 
           <div class="area-delete-wrap">
-            <button class="area-delete-btn" onclick="deleteArea('${data.id}')">Gebied verwijderen</button>
+            <button class="area-delete-btn" onclick="deleteArea('${data.id}')">
+              <span>Gebied verwijderen</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                <path d="M10 11v6"></path>
+                <path d="M14 11v6"></path>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
-    </div>`;
+    </div>
+  `;
+}
+
+function handleAreaOverlayClick(event) {
+  if (event.target.classList.contains('area-editor-overlay')) {
+    closeAreaEditor();
+  }
+}
+window.handleAreaOverlayClick = handleAreaOverlayClick;
+
+function getAreaHostLatLng(areaId) {
+  const entry = areaCache[areaId];
+  if (!entry) return map.getCenter();
+  try {
+    return entry.layer.getBounds().getCenter();
+  } catch (e) {
+    return map.getCenter();
+  }
+}
+
+function applyAreaPopupPosition() {
+  if (!activeAreaPopup || !activeAreaPopupId || !map._popup || map._popup !== activeAreaPopup) return;
+
+  const wrapper = activeAreaPopup.getElement();
+  if (!wrapper) return;
+
+  const overlay = wrapper.querySelector('.area-editor-overlay');
+  if (!overlay) return;
+
+  const rect = getVisibleMapRect();
+
+  overlay.style.left = rect.left + 'px';
+  overlay.style.top = rect.top + 'px';
+  overlay.style.width = rect.width + 'px';
+  overlay.style.height = rect.height + 'px';
+  overlay.style.right = 'auto';
+  overlay.style.bottom = 'auto';
+  overlay.style.padding = isMobile() ? '0' : '24px';
 }
 
 function openAreaEditor(areaId, latlng) {
   const cur = areaCache[areaId]?.data;
   if (!cur) return;
 
-  L.popup({
-    className: 'area-editor-popup-wrap',
+  activeAreaPopupId = areaId;
+
+  if (activeAreaPopup) {
+    try { map.closePopup(activeAreaPopup); } catch(e) {}
+    activeAreaPopup = null;
+  }
+
+  const popup = L.popup({
+    className: 'area-editor-host-popup',
     closeButton: false,
     autoClose: true,
     closeOnEscapeKey: true,
     closeOnClick: false,
-    maxWidth: window.innerWidth,
-    minWidth: Math.min(window.innerWidth, 320)
+    minWidth: 10,
+    maxWidth: 2000,
+    offset: [0, 0]
   })
-    .setLatLng(latlng || areaCache[areaId].layer.getBounds().getCenter())
-    .setContent(buildAreaPopupHtml(cur))
-    .openOn(map);
+    .setLatLng(latlng || getAreaHostLatLng(areaId))
+    .setContent(buildAreaPopupHtml(cur));
 
-  setTimeout(() => syncAreaNameSaveButton(areaId), 40);
+  popup.on('remove', () => {
+    activeAreaPopup = null;
+    activeAreaPopupId = null;
+    stopAreaGeometryEdit(false);
+  });
+
+  popup.openOn(map);
+  activeAreaPopup = popup;
+
+  setTimeout(() => {
+    applyAreaPopupPosition();
+    syncAreaNameSaveButton(areaId);
+  }, 30);
 }
 
 function closeAreaEditor() {
@@ -1163,7 +968,6 @@ function syncAreaNameSaveButton(areaId) {
 
   const current = input.value;
   const changed = current !== original;
-
   button.classList.toggle('show', changed);
 }
 
@@ -1172,21 +976,137 @@ function handleAreaNameInput(areaId) {
 }
 window.handleAreaNameInput = handleAreaNameInput;
 
+function flattenLatLngs(value) {
+  if (!Array.isArray(value)) return [];
+  if (value.length && value[0] && typeof value[0].lat === 'number') return value;
+  return flattenLatLngs(value[0] || []);
+}
+
+function captureAreaLatLngs(layer, type) {
+  const raw = layer.getLatLngs();
+  if (type === 'rectangle') {
+    const points = flattenLatLngs(raw);
+    if (points.length >= 4) return [points.slice(0, 4)];
+    return raw;
+  }
+  return raw;
+}
+
+function stopAreaGeometryEdit(restoreOriginal = false) {
+  if (!activeAreaEditId) return;
+
+  const entry = areaCache[activeAreaEditId];
+  if (entry) {
+    const layer = entry.layer;
+
+    if (restoreOriginal && entry.originalLatLngsBeforeEdit) {
+      try {
+        layer.setLatLngs(JSON.parse(entry.originalLatLngsBeforeEdit));
+        if (layer.redraw) layer.redraw();
+      } catch (e) {}
+    }
+
+    try {
+      if (entry.editorInstance && entry.editorInstance.disable) {
+        entry.editorInstance.disable();
+      } else if (layer.editing && layer.editing.disable) {
+        layer.editing.disable();
+      }
+    } catch (e) {}
+
+    entry.editorInstance = null;
+    entry.originalLatLngsBeforeEdit = null;
+  }
+
+  activeAreaEditId = null;
+  activeAreaEditorMode = false;
+  map.getContainer().classList.remove('area-geometry-editing');
+}
+
+function refreshOpenAreaEditor() {
+  if (!activeAreaPopupId) return;
+  setTimeout(() => {
+    openAreaEditor(activeAreaPopupId);
+  }, 20);
+}
+
+function startAreaGeometryEdit(id) {
+  const entry = areaCache[id];
+  if (!entry) return;
+
+  if (activeAreaEditId && activeAreaEditId !== id) {
+    stopAreaGeometryEdit(false);
+  }
+
+  stopDrawing();
+
+  const layer = entry.layer;
+  const data = entry.data;
+
+  entry.originalLatLngsBeforeEdit = JSON.stringify(captureAreaLatLngs(layer, data.type));
+
+  try {
+    if (data.type === 'rectangle') {
+      if (!layer.editing) {
+        layer.editing = new L.Edit.Rectangle(layer);
+      }
+      entry.editorInstance = layer.editing;
+      entry.editorInstance.enable();
+    } else {
+      if (!layer.editing) {
+        layer.editing = new L.Edit.Poly(layer);
+      }
+      entry.editorInstance = layer.editing;
+      entry.editorInstance.enable();
+    }
+  } catch (e) {
+    toast('Bewerken van dit gebied lukte niet.');
+    return;
+  }
+
+  activeAreaEditId = id;
+  activeAreaEditorMode = true;
+  map.getContainer().classList.add('area-geometry-editing');
+  suppressNextMapClickUntil = Date.now() + 500;
+
+  refreshOpenAreaEditor();
+  toast('Sleep nu de punten van het gebied.');
+}
+window.startAreaGeometryEdit = startAreaGeometryEdit;
+
+function cancelAreaGeometryEdit(id) {
+  if (activeAreaEditId !== id) return;
+  stopAreaGeometryEdit(true);
+  refreshOpenAreaEditor();
+  toast('Bewerken geannuleerd.');
+}
+window.cancelAreaGeometryEdit = cancelAreaGeometryEdit;
+
+function saveAreaGeometry(id) {
+  const entry = areaCache[id];
+  if (!entry || activeAreaEditId !== id) return;
+
+  const newLatLngs = captureAreaLatLngs(entry.layer, entry.data.type);
+  areasRef.child(id).update({
+    latlngs: JSON.stringify(newLatLngs)
+  });
+
+  stopAreaGeometryEdit(false);
+  refreshOpenAreaEditor();
+  toast('Gebied bijgewerkt!');
+}
+window.saveAreaGeometry = saveAreaGeometry;
+
 function renderArea(data) {
   if (areaCache[data.id]) {
     drawnItems.removeLayer(areaCache[data.id].layer);
   }
 
-  const normalizedData = {
-    ...data,
-    tags: normalizeAreaTags(data.tags || [])
-  };
-
-  const col = COLORS[normalizedData.color]?.hex || '#999';
-  const latlngs = JSON.parse(normalizedData.latlngs);
+  const col = COLORS[data.color]?.hex || '#999';
+  const latlngs = JSON.parse(data.latlngs);
 
   let layer;
-  if (normalizedData.type === 'rectangle') {
+  if (data.type === 'rectangle') {
     layer = L.rectangle(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
   } else {
     layer = L.polygon(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
@@ -1195,10 +1115,12 @@ function renderArea(data) {
   let _areaClickTimer = null;
   layer.on('click', e => {
     L.DomEvent.stopPropagation(e);
-    if (currentDrawMode) return;
+    if (currentDrawMode || activeAreaEditorMode) return;
     if (_areaClickTimer) return;
+
     _areaClickTimer = setTimeout(() => {
       _areaClickTimer = null;
+      if (activeAreaEditorMode) return;
       const hid = uid();
       housesRef.child(hid).set({ id: hid, lat: e.latlng.lat, lng: e.latlng.lng, name: '', rating: 0, notes: '', link: '' });
       setTimeout(() => openModal(hid), 300);
@@ -1208,26 +1130,30 @@ function renderArea(data) {
   layer.on('dblclick', e => {
     L.DomEvent.stopPropagation(e);
     if (_areaClickTimer) { clearTimeout(_areaClickTimer); _areaClickTimer = null; }
-    openAreaEditor(normalizedData.id, e.latlng);
+    stopAreaGeometryEdit(false);
+    openAreaEditor(data.id, e.latlng);
   });
 
   drawnItems.addLayer(layer);
-  areaCache[normalizedData.id] = { data: normalizedData, layer };
+  areaCache[data.id] = { data, layer, editorInstance: null, originalLatLngsBeforeEdit: null };
+
   renderSidebarGebieden();
+
+  if (activeAreaPopupId === data.id) {
+    setTimeout(() => openAreaEditor(data.id), 50);
+  }
 }
 
 window.saveAreaName = function(id) {
-  const val = document.getElementById('ap-name-' + id)?.value || '';
+  const input = document.getElementById('ap-name-' + id);
+  const val = input ? input.value : '';
   areasRef.child(id).update({ name: val });
   toast('Naam opgeslagen!');
 };
 
-window.startAreaGeometryEdit = function(id) {
-  toast('Gebied bewerken staat klaar voor de volgende stap.');
-};
-
 window.deleteArea = function(id) {
   if (!confirm('Weet je zeker dat je dit gebied wilt verwijderen?')) return;
+  stopAreaGeometryEdit(false);
   areasRef.child(id).remove();
   map.closePopup();
   toast('Gebied verwijderd.');
@@ -1272,7 +1198,8 @@ function renderHouse(data) {
 }
 
 map.on('click', e => {
-  if (currentDrawMode) return;
+  if (currentDrawMode || activeAreaEditorMode) return;
+  if (Date.now() < suppressNextMapClickUntil) return;
 
   const id = uid();
   const houseData = {
@@ -1353,10 +1280,8 @@ mDelete.addEventListener('click', () => {
 mCancel.addEventListener('click', closeModal);
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 
-const sidebar       = document.getElementById('sidebar');
+const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebar-toggle');
-
-function isMobile() { return window.innerWidth <= 768; }
 
 function updateToggleIcon() {
   const open = !sidebar.classList.contains('collapsed');
@@ -1371,9 +1296,17 @@ updateToggleIcon();
 sidebarToggle.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
   updateToggleIcon();
+  setTimeout(applyAreaPopupPosition, 260);
 });
 
-window.addEventListener('resize', updateToggleIcon);
+window.addEventListener('resize', () => {
+  updateToggleIcon();
+  applyAreaPopupPosition();
+});
+
+map.on('move', applyAreaPopupPosition);
+map.on('zoom', applyAreaPopupPosition);
+map.on('resize', applyAreaPopupPosition);
 
 document.querySelectorAll('.stab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -1399,24 +1332,11 @@ function renderSidebarGebieden() {
   container.innerHTML = areas.map(({ data }) => {
     const col = COLORS[data.color]?.hex || '#999';
     const name = data.name || '<em style="color:var(--muted)">Naamloos</em>';
-    const tags = normalizeAreaTags(data.tags || []);
-    const tagHtml = tags.length
-      ? `<div class="sidebar-area-tags">
-          ${tags.slice(0, 4).map(tag => `
-            <span class="sidebar-area-tag ${tag.tone}">
-              ${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}
-            </span>
-          `).join('')}
-          ${tags.length > 4 ? `<span class="sidebar-area-tag positive">+${tags.length - 4}</span>` : ''}
-        </div>`
-      : '';
-
     return `<div class="list-item" onclick="panToArea('${data.id}')">
       <div class="dot" style="background:${col}"></div>
       <div class="info">
         <div class="name">${name}</div>
         <div class="sub">${COLORS[data.color]?.label || ''}</div>
-        ${tagHtml}
       </div>
     </div>`;
   }).join('');
@@ -1474,23 +1394,17 @@ window.panToHouse = function(id) {
 };
 
 areasRef.on('child_added', snap => { renderArea(snap.val()); });
-areasRef.on('child_changed', snap => {
-  const incoming = snap.val();
-  const shouldReopen = map._popup && map._popup.isOpen && map._popup.isOpen() &&
-    String(map._popup.getContent()).includes(`ap-name-${incoming.id}`);
-
-  renderArea(incoming);
-
-  if (shouldReopen) {
-    setTimeout(() => openAreaEditor(incoming.id), 50);
-  }
-});
+areasRef.on('child_changed', snap => { renderArea(snap.val()); });
 areasRef.on('child_removed', snap => {
   const id = snap.val().id;
   if (areaCache[id]) {
     drawnItems.removeLayer(areaCache[id].layer);
     delete areaCache[id];
     renderSidebarGebieden();
+  }
+  if (activeAreaPopupId === id) {
+    activeAreaPopupId = null;
+    activeAreaPopup = null;
   }
 });
 
@@ -1511,7 +1425,10 @@ housesRef.on('child_removed', snap => {
 });
 
 const observer = new MutationObserver(() => {
-  setTimeout(() => map.invalidateSize(), 260);
+  setTimeout(() => {
+    map.invalidateSize();
+    applyAreaPopupPosition();
+  }, 260);
 });
 observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
 
