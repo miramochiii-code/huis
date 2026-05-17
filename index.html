@@ -29,7 +29,6 @@
 
     html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text); }
 
-    /* ── TOOLBAR ── */
     #toolbar {
       position: fixed; top: 0; left: 0; right: 0; height: var(--toolbar-h);
       background: var(--card); border-bottom: 1px solid var(--border);
@@ -63,7 +62,6 @@
       font-size: 12px; color: var(--muted); white-space: nowrap;
     }
 
-    /* tooltip */
     .tooltip-wrap { position: relative; }
     .tooltip-wrap .tip {
       display: none; position: absolute; top: 44px; left: 50%; transform: translateX(-50%);
@@ -72,13 +70,11 @@
     }
     .tooltip-wrap:hover .tip { display: block; }
 
-    /* ── MAP ── */
     #map {
       position: fixed; top: var(--toolbar-h); left: 0; right: 0; bottom: 0;
       z-index: 1;
     }
 
-    /* ── SIDEBAR ── */
     #sidebar {
       position: fixed; top: var(--toolbar-h); right: 0; width: var(--sidebar-w);
       bottom: 0; background: var(--card); border-left: 1px solid var(--border);
@@ -127,7 +123,6 @@
       padding: 4px 8px; background: var(--bg); cursor: pointer;
     }
 
-    /* list items */
     .list-item {
       display: flex; align-items: flex-start; gap: 10px; padding: 10px;
       border-radius: 10px; cursor: pointer; transition: background .15s;
@@ -142,7 +137,6 @@
     .list-item .sub { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .stars-sm { color: #f59e0b; font-size: 12px; letter-spacing: 1px; }
 
-    /* ── LEGEND ── */
     #legend {
       position: fixed; bottom: 20px; left: 20px; background: var(--card);
       border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px;
@@ -152,7 +146,6 @@
     .leg-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
     .leg-dot { width: 14px; height: 14px; border-radius: 3px; opacity: .85; }
 
-    /* ── MODAL ── */
     #modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
       z-index: 3000; align-items: center; justify-content: center;
@@ -175,7 +168,6 @@
     .modal-input:focus { outline: none; border-color: var(--accent); }
     textarea.modal-input { resize: vertical; min-height: 72px; }
 
-    /* star rating */
     #star-rating { display: flex; gap: 4px; margin-top: 4px; }
     .star { font-size: 24px; cursor: pointer; color: #d1d5db; transition: color .1s; }
     .star.filled { color: #f59e0b; }
@@ -199,16 +191,107 @@
       cursor: pointer;
     }
 
-    /* area popup */
     .area-popup input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font-size: 13px; margin-bottom: 8px; }
     .area-popup button { padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; }
     .area-popup .save-btn { background: var(--accent); color: #fff; margin-right: 6px; }
     .area-popup .del-btn  { background: #fee2e2; color: var(--rood); }
 
-    /* ── HOUSE MARKER ── */
-    .house-circle-icon { /* defined via Leaflet divIcon */ }
+    /* nieuwe area tags styling */
+    .area-tags-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .area-tags-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .area-tags-list,
+    .area-tags-selected {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .area-tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .12s ease, opacity .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .area-tag-chip:hover { transform: translateY(-1px); }
+    .area-tag-chip .tag-plus,
+    .area-tag-chip .tag-remove { font-weight: 800; line-height: 1; }
+    .area-tag-chip.is-positive { background: #e8f5e9; color: #1b5e20; border-color: #b7dfba; }
+    .area-tag-chip.is-negative { background: #ffebee; color: #b71c1c; border-color: #ffc9cf; }
+    .area-tag-chip.is-selected { box-shadow: inset 0 0 0 2px rgba(0,0,0,.08); }
+    .area-tag-chip.is-unselected { opacity: .9; background-image: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.15)); }
+    .area-tag-chip.is-custom { border-style: dashed; }
+    .area-tags-empty { font-size: 12px; color: var(--muted); margin-top: 8px; }
+    .custom-tag-box {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      background: #fafbfc;
+    }
+    .custom-tag-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .custom-tag-row input,
+    .custom-tag-row select {
+      flex: 1;
+      min-width: 0;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 0 10px;
+      font-size: 14px;
+      background: #fff;
+    }
+    .custom-tag-row .emoji-input { max-width: 84px; text-align: center; }
+    .custom-tag-row button {
+      height: 38px;
+      border: none;
+      border-radius: 10px;
+      padding: 0 12px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .sidebar-area-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .sidebar-area-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .sidebar-area-tag.positive { background: #e8f5e9; color: #1b5e20; }
+    .sidebar-area-tag.negative { background: #ffebee; color: #b71c1c; }
 
-    /* ── STATUS TOAST ── */
+    .house-circle-icon {}
     #toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
       background: #333; color: #fff; padding: 8px 18px; border-radius: 20px;
@@ -217,248 +300,152 @@
     }
     #toast.show { opacity: 1; }
 
-    /* Leaflet draw toolbar tweak */
     .leaflet-draw-toolbar a { background-color: var(--card) !important; }
 
-    /* scrollbar */
     #sidebar-body::-webkit-scrollbar { width: 5px; }
     #sidebar-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    /* ── SIDEBAR HANDLE (mobile pill) ── */
     #sidebar-handle {
       display: none; width: 40px; height: 4px; background: var(--border);
       border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0;
     }
 
-    /* ════════════════════════════════════════════════
-       RESPONSIVE – MOBILE (≤ 768 px)
-    ════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-
-      /* ── Toolbar ── */
-      #toolbar {
-        padding: 0 8px; gap: 5px;
-        overflow-x: auto; overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      #toolbar::-webkit-scrollbar { display: none; }
-      #toolbar h1 { font-size: 15px; }
-      #toolbar h1 .btn-lbl { display: none; }   /* show only 🏠 */
-      .kleur-lbl  { display: none; }
-      .tb-sep     { display: none; }
-      .btn-lbl    { display: none; }             /* icon-only buttons */
-      .tb-btn     { padding: 0 10px; min-width: 36px; justify-content: center; }
-      #draw-mode-label { display: none; }
-      .color-btn  { width: 26px; height: 26px; }
-
-      /* tooltip: tap-friendly (show on focus/active instead of hover) */
-      .tooltip-wrap .tip { width: 200px; font-size: 11px; }
-
-      /* ── Sidebar → bottom sheet ── */
+      :root { --sidebar-w: min(100vw, 100%); }
       #sidebar {
-        top: auto;
-        bottom: 0; left: 0; right: 0;
         width: 100%;
-        height: 58vh;
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 42vh;
+        max-height: 78vh;
         border-left: none;
         border-top: 1px solid var(--border);
-        border-radius: 18px 18px 0 0;
-        box-shadow: 0 -4px 20px rgba(0,0,0,.12);
-        /* override desktop collapsed direction */
-        transform: translateY(0) !important;
-        transition: transform .28s ease;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
       }
-      #sidebar.collapsed {
-        transform: translateY(100%) !important;
-      }
-
-      /* ── Sidebar toggle → FAB bottom-right ── */
-      #sidebar-toggle {
-        top: auto !important;
-        bottom: 20px; right: 16px;
-        width: 44px; height: 44px;
-        border-radius: 50%;
-        font-size: 20px;
-        box-shadow: 0 4px 14px rgba(0,0,0,.25);
-      }
-      /* desktop rule that shifts the button left when open – cancel on mobile */
-      #sidebar:not(.collapsed) ~ #sidebar-toggle {
-        right: 16px !important;
-        bottom: calc(58vh + 14px);
-      }
-
-      /* ── Sidebar handle visible ── */
+      #sidebar.collapsed { transform: translateY(calc(100% - 54px)); }
+      #sidebar-toggle { display: none; }
       #sidebar-handle { display: block; }
-
-      /* ── Modal ── */
-      #modal {
-        width: 100%;
-        max-width: 100%;
-        border-radius: 18px 18px 0 0;
-        margin: 0;
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        max-height: 90vh;
-      }
-      #modal-overlay { align-items: flex-end; }
-
-      /* ── Legend ── */
-      #legend {
-        bottom: 16px; left: 10px;
-        font-size: 11px; padding: 8px 12px;
-      }
-      #legend h3 { font-size: 10px; }
-      .leg-dot { width: 11px; height: 11px; }
-
-      /* ── Toast: above FAB ── */
-      #toast { bottom: 90px; }
+      #legend { left: 12px; bottom: calc(42vh + 16px); max-width: calc(100vw - 24px); }
+      #modal { width: min(96vw, 420px); padding: 18px; }
+      .custom-tag-row { flex-direction: column; }
+      .custom-tag-row .emoji-input { max-width: none; }
     }
   </style>
 </head>
 <body>
+  <div id="toolbar">
+    <h1>Huis Zoeken</h1>
 
-<!-- ═══════════════════════════════════════════════ TOOLBAR -->
-<div id="toolbar">
-  <h1>🏠 <span class="btn-lbl">HALLOOOOOOOOOOOOOOOO!!!</span></h1>
-  <div class="tb-sep"></div>
+    <div class="tb-sep"></div>
 
-  <span class="kleur-lbl" style="font-size:12px;color:var(--muted);white-space:nowrap">Kleur:</span>
-  <button class="color-btn active" data-color="groen" title="Groen – Hier willen we wonen"></button>
-  <button class="color-btn" data-color="geel"  title="Geel – Twijfel"></button>
-  <button class="color-btn" data-color="rood"  title="Rood – Hier willen we niet wonen"></button>
+    <button class="color-btn active" data-color="groen" title="Groen"></button>
+    <button class="color-btn" data-color="geel" title="Geel"></button>
+    <button class="color-btn" data-color="rood" title="Rood"></button>
 
-  <div class="tb-sep"></div>
+    <div class="tb-sep"></div>
 
-  <button class="tb-btn" id="btn-polygon" title="Wijk tekenen">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 20 2 20"/></svg>
-    <span class="btn-lbl">Wijk tekenen</span>
-  </button>
-  <button class="tb-btn" id="btn-rect" title="Rechthoek tekenen">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/></svg>
-    <span class="btn-lbl">Rechthoek</span>
-  </button>
-  <button class="tb-btn" id="btn-cancel-draw" style="display:none" title="Stoppen">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    <span class="btn-lbl">Stoppen</span>
-  </button>
+    <button id="draw-polygon" class="tb-btn">Polygon</button>
+    <button id="draw-rectangle" class="tb-btn">Rectangle</button>
 
-  <span id="draw-mode-label"></span>
-
-  <div class="tb-sep"></div>
-
-  <div class="tooltip-wrap">
-    <button class="tb-btn" title="Uitleg">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-      <span class="btn-lbl">Uitleg</span>
-    </button>
-    <div class="tip">
-      <strong>Zones tekenen:</strong> Kies een kleur → klik "Wijk tekenen" of "Rechthoek" → teken op de kaart → dubbelklik om af te ronden.<br><br>
-      <strong>Huis toevoegen:</strong> Klik 1× op de kaart (ook op een getekende wijk) om een huis-markering te plaatsen.<br><br>
-      <strong>Wijk-instellingen:</strong> Dubbelklik op een getekend gebied om de naam te bewerken of te verwijderen.<br><br>
-      <strong>Huis verplaatsen:</strong> Klik en sleep een huis-markering naar de juiste plek.
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════ MAP -->
-<div id="map"></div>
-
-<!-- ═══════════════════════════════════════════════ SIDEBAR TOGGLE -->
-<button id="sidebar-toggle" title="Zijpaneel">&#9776;</button>
-
-<!-- ═══════════════════════════════════════════════ SIDEBAR -->
-<div id="sidebar">
-  <div id="sidebar-handle"></div>
-  <div id="sidebar-header">
-    <h2>Overzicht</h2>
-    <input type="text" id="house-search" placeholder="Zoek huis op naam of notitie…" />
-  </div>
-
-  <div id="sidebar-tabs">
-    <div class="stab active" data-tab="wijken">Wijken</div>
-    <div class="stab" data-tab="huizen">Huizen</div>
-  </div>
-
-  <div id="sidebar-body">
-    <!-- Wijken section -->
-    <div class="section active" id="sec-wijken">
-      <div id="list-wijken"></div>
-    </div>
-
-    <!-- Huizen section -->
-    <div class="section" id="sec-huizen">
-      <div class="sort-row">
-        <select id="sort-huizen">
-          <option value="rating-desc">Sorteren: Sterren ↓</option>
-          <option value="rating-asc">Sorteren: Sterren ↑</option>
-          <option value="name-asc">Naam A–Z</option>
-        </select>
+    <div class="tooltip-wrap">
+      <button class="tb-btn">?</button>
+      <div class="tip">
+        Kies een kleur, teken een wijk op de kaart en geef daarna een naam. Klik op een huis-marker om details op te slaan.
       </div>
-      <div id="list-huizen"></div>
+    </div>
+
+    <div id="draw-mode-label"></div>
+  </div>
+
+  <div id="map"></div>
+
+  <aside id="sidebar" class="collapsed">
+    <div id="sidebar-handle"></div>
+
+    <div id="sidebar-header">
+      <h2>Overzicht</h2>
+      <input id="house-search" type="text" placeholder="Zoek huis..." />
+    </div>
+
+    <div id="sidebar-tabs">
+      <div class="stab active" data-tab="huizen">Huizen</div>
+      <div class="stab" data-tab="wijken">Wijken</div>
+    </div>
+
+    <div id="sidebar-body">
+      <section id="huizen-section" class="section active">
+        <div class="sort-row">
+          <select id="house-sort">
+            <option value="rating-desc">Sterren hoog → laag</option>
+            <option value="rating-asc">Sterren laag → hoog</option>
+            <option value="name-asc">Naam A → Z</option>
+            <option value="name-desc">Naam Z → A</option>
+          </select>
+        </div>
+        <div id="house-list"></div>
+      </section>
+
+      <section id="wijken-section" class="section">
+        <div id="area-list"></div>
+      </section>
+    </div>
+  </aside>
+
+  <button id="sidebar-toggle">☰</button>
+
+  <div id="legend">
+    <h3>Legenda</h3>
+    <div class="leg-row"><span class="leg-dot" style="background: var(--groen);"></span> Goede zone</div>
+    <div class="leg-row"><span class="leg-dot" style="background: var(--geel);"></span> Twijfelzone</div>
+    <div class="leg-row"><span class="leg-dot" style="background: var(--rood);"></span> Minder geschikt</div>
+  </div>
+
+  <div id="modal-overlay">
+    <div id="modal">
+      <h3 id="modal-title">Huis toevoegen</h3>
+
+      <div class="field-label">Naam</div>
+      <input id="house-name" class="modal-input" type="text" placeholder="Bijv. Appelstraat 12" />
+
+      <div class="field-label">Beoordeling</div>
+      <div id="star-rating">
+        <span class="star" data-star="1">★</span>
+        <span class="star" data-star="2">★</span>
+        <span class="star" data-star="3">★</span>
+        <span class="star" data-star="4">★</span>
+        <span class="star" data-star="5">★</span>
+      </div>
+
+      <div class="field-label">Notities</div>
+      <textarea id="house-notes" class="modal-input" placeholder="Wat vind je van dit huis?"></textarea>
+
+      <div class="field-label">Link</div>
+      <input id="house-link" class="modal-input" type="url" placeholder="https://..." />
+
+      <div class="modal-actions">
+        <button id="save-house" class="btn-primary">Opslaan</button>
+        <button id="delete-house" class="btn-danger" type="button">Verwijderen</button>
+        <button id="cancel-house" class="btn-cancel" type="button">Annuleren</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ═══════════════════════════════════════════════ LEGEND -->
-<div id="legend">
-  <h3>Legenda</h3>
-  <div class="leg-row"><div class="leg-dot" style="background:var(--groen)"></div> Hier willen we wonen</div>
-  <div class="leg-row"><div class="leg-dot" style="background:var(--geel)"></div> Twijfel (ligt aan huis)</div>
-  <div class="leg-row"><div class="leg-dot" style="background:var(--rood)"></div> Hier willen we niet wonen</div>
-  <div class="leg-row"><div style="width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #333;flex-shrink:0"></div> Huis markering</div>
-</div>
+  <div id="toast"></div>
 
-<!-- ═══════════════════════════════════════════════ HOUSE MODAL -->
-<div id="modal-overlay">
-  <div id="modal">
-    <h3 id="modal-title">Huis toevoegen</h3>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 
-    <div class="field-label">Naam / adres</div>
-    <input class="modal-input" id="m-name" type="text" placeholder="bijv. Archipelbuurt nr. 12" />
+  <!-- Laat jouw bestaande Firebase config staan -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getDatabase, ref, push, set, update, remove, onChildAdded, onChildChanged, onChildRemoved
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    <div class="field-label">Beoordeling</div>
-    <div id="star-rating">
-      <span class="star" data-v="1">&#9733;</span>
-      <span class="star" data-v="2">&#9733;</span>
-      <span class="star" data-v="3">&#9733;</span>
-      <span class="star" data-v="4">&#9733;</span>
-      <span class="star" data-v="5">&#9733;</span>
-    </div>
-
-    <div class="field-label">Notities</div>
-    <textarea class="modal-input" id="m-notes" placeholder="bijv. Leuke tuin, maar drukke straat…"></textarea>
-
-    <div class="field-label">Link (Funda o.i.d.)</div>
-    <input class="modal-input" id="m-link" type="url" placeholder="https://www.funda.nl/…" />
-
-    <div class="modal-actions">
-      <button class="btn-primary" id="m-save">Opslaan</button>
-      <button class="btn-danger" id="m-delete" style="display:none">Verwijderen</button>
-      <button class="btn-cancel" id="m-cancel">Annuleren</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════ TOAST -->
-<div id="toast"></div>
-
-<!-- ═══════════════════════════════════════════════ SCRIPTS -->
-
-<!-- Firebase SDK (compat v9) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<!-- Leaflet -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Leaflet.draw -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-
-<script>
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  FIREBASE CONFIGURATIE                                           ║
-// ║  Vul hieronder jouw eigen Firebase-projectgegevens in.           ║
-// ╚══════════════════════════════════════════════════════════════════╝
+    // ----- JOUW EIGEN FIREBASE CONFIG HIER LATEN STAAN -----
 const firebaseConfig = {
   apiKey: "AIzaSyChOTJn4_ifTBTAW30OULb8pCnp0TSOLTQ",
   authDomain: "house-557b5.firebaseapp.com",
@@ -469,606 +456,652 @@ const firebaseConfig = {
   appId: "1:617323482984:web:23bc8167b2ee8bbdae10dd"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const areasRef  = db.ref('areas');
-const housesRef = db.ref('houses');
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const areasRef = ref(db, 'areas');
+    const housesRef = ref(db, 'houses');
 
-// ── helpers ──────────────────────────────────────────────────────────
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+    const map = L.map('map', { zoomControl: true }).setView([52.0705, 4.3007], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
-function toast(msg, ms = 2200) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), ms);
-}
+    const drawnItems = new L.FeatureGroup().addTo(map);
 
-function starsHtml(n, size = 14) {
-  let h = '';
-  for (let i = 1; i <= 5; i++) h += `<span style="color:${i<=n?'#f59e0b':'#d1d5db'};font-size:${size}px">★</span>`;
-  return h;
-}
+    const areaLayers = {};
+    const houseLayers = {};
 
-// ── COLOR CONFIG ─────────────────────────────────────────────────────
-const COLORS = {
-  groen: { hex: '#4CAF50', label: 'Groen – Hier willen we wonen' },
-  geel:  { hex: '#FFC107', label: 'Geel – Twijfel (ligt aan huis)' },
-  rood:  { hex: '#F44336', label: 'Rood – Hier willen we niet wonen' },
-};
+    // nieuwe helpers voor area tags
+    const PRESET_AREA_TAGS = [
+      { id: 'kindvriendelijk', label: 'kindvriendelijk', tone: 'positive', emoji: '🧒', preset: true },
+      { id: 'winkels-10-min-lopen', label: 'winkels 10 min lopen', tone: 'positive', emoji: '🛍️', preset: true },
+      { id: 'basisschool', label: 'basisschool', tone: 'positive', emoji: '🏫', preset: true },
+      { id: 'kinderopvang', label: 'kinderopvang', tone: 'positive', emoji: '🍼', preset: true },
+      { id: 'park', label: 'park', tone: 'positive', emoji: '🌳', preset: true },
+      { id: 'speeltuin', label: 'speeltuin', tone: 'positive', emoji: '🛝', preset: true },
+      { id: 'veel-parkeer', label: 'veel parkeer', tone: 'positive', emoji: '🅿️', preset: true },
+      { id: 'rustig', label: 'rustig', tone: 'positive', emoji: '😌', preset: true },
+      { id: 'middel-parkeer', label: 'middel parkeer', tone: 'negative', emoji: '🚗', preset: true },
+      { id: 'weinig-parkeer', label: 'weinig parkeer', tone: 'negative', emoji: '🚫', preset: true },
+      { id: 'sociaal-in-de-buurt', label: 'sociaal in de buurt', tone: 'negative', emoji: '📢', preset: true }
+    ];
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  MAP SETUP                                                       ║
-// ╚══════════════════════════════════════════════════════════════════╝
-const map = L.map('map', { zoomControl: true }).setView([52.0705, 4.3007], 13);
+    let selectedColor = 'groen';
+    let currentDrawMode = null;
+    let selectedHouseId = null;
+    let selectedHouseRating = 0;
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  maxZoom: 19
-}).addTo(map);
+    const colorMap = {
+      groen: getCssVar('--groen'),
+      geel: getCssVar('--geel'),
+      rood: getCssVar('--rood')
+    };
 
-// Drawn items layer (managed locally; Firebase is source of truth)
-const drawnItems = new L.FeatureGroup().addTo(map);
-
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  STATE                                                           ║
-// ╚══════════════════════════════════════════════════════════════════╝
-let selectedColor = 'groen';
-let currentDrawMode = null; // 'polygon' | 'rectangle' | null
-let drawHandler = null;
-
-// In-memory caches (key → { data, layer })
-const areaCache  = {}; // id → { data, layer }
-const houseCache = {}; // id → { data, marker }
-
-// Modal state
-let modalHouseId = null; // null = new, string = editing
-
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  TOOLBAR: color selection                                        ║
-// ╚══════════════════════════════════════════════════════════════════╝
-document.querySelectorAll('.color-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedColor = btn.dataset.color;
-  });
-});
-
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  TOOLBAR: draw buttons                                           ║
-// ╚══════════════════════════════════════════════════════════════════╝
-const btnPolygon    = document.getElementById('btn-polygon');
-const btnRect       = document.getElementById('btn-rect');
-const btnCancelDraw = document.getElementById('btn-cancel-draw');
-const drawLabel     = document.getElementById('draw-mode-label');
-
-function stopDrawing() {
-  if (drawHandler) { try { drawHandler.disable(); } catch(e){} drawHandler = null; }
-  currentDrawMode = null;
-  btnPolygon.classList.remove('active');
-  btnRect.classList.remove('active');
-  btnCancelDraw.style.display = 'none';
-  drawLabel.textContent = '';
-}
-
-function startDrawing(mode) {
-  stopDrawing();
-  currentDrawMode = mode;
-  const col = COLORS[selectedColor].hex;
-
-  const opts = {
-    shapeOptions: { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 },
-    showArea: false
-  };
-
-  if (mode === 'polygon') {
-    drawHandler = new L.Draw.Polygon(map, opts);
-    drawLabel.textContent = 'Klik punten → dubbelklik om af te ronden';
-    btnPolygon.classList.add('active');
-  } else {
-    drawHandler = new L.Draw.Rectangle(map, opts);
-    drawLabel.textContent = 'Klik en sleep om een rechthoek te tekenen';
-    btnRect.classList.add('active');
-  }
-
-  drawHandler.enable();
-  btnCancelDraw.style.display = '';
-}
-
-btnPolygon.addEventListener('click', () => {
-  if (currentDrawMode === 'polygon') { stopDrawing(); return; }
-  startDrawing('polygon');
-});
-btnRect.addEventListener('click', () => {
-  if (currentDrawMode === 'rectangle') { stopDrawing(); return; }
-  startDrawing('rectangle');
-});
-btnCancelDraw.addEventListener('click', stopDrawing);
-
-// ── on draw complete ─────────────────────────────────────────────────
-map.on(L.Draw.Event.CREATED, e => {
-  const layer = e.layer;
-  const id = uid();
-  const latlngs = layer instanceof L.Rectangle
-    ? layer.getLatLngs()
-    : layer.getLatLngs();
-
-  const areaData = {
-    id,
-    color: selectedColor,
-    name: '',
-    type: currentDrawMode === 'rectangle' ? 'rectangle' : 'polygon',
-    latlngs: JSON.stringify(latlngs)
-  };
-
-  stopDrawing();
-  areasRef.child(id).set(areaData);
-  toast('Gebied opgeslagen!');
-});
-
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  AREA RENDERING & POPUPS                                         ║
-// ╚══════════════════════════════════════════════════════════════════╝
-function buildAreaPopupHtml(data) {
-  return `
-    <div class="area-popup">
-      <strong style="font-size:13px">${COLORS[data.color].label}</strong><br><br>
-      <label style="font-size:11px;color:#666">Naam:</label>
-      <input id="ap-name-${data.id}" value="${data.name || ''}" placeholder="Bijv. Archipelbuurt" /><br>
-      <button class="save-btn" onclick="saveAreaName('${data.id}')">Opslaan</button>
-      <button class="del-btn"  onclick="deleteArea('${data.id}')">Verwijderen</button>
-    </div>`;
-}
-
-function renderArea(data) {
-  // Remove old layer if exists
-  if (areaCache[data.id]) {
-    drawnItems.removeLayer(areaCache[data.id].layer);
-  }
-
-  const col = COLORS[data.color]?.hex || '#999';
-  const latlngs = JSON.parse(data.latlngs);
-
-  let layer;
-  if (data.type === 'rectangle') {
-    layer = L.rectangle(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
-  } else {
-    layer = L.polygon(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
-  }
-
-  // Single click on area → place a house at that spot (same as map click)
-  let _areaClickTimer = null;
-  layer.on('click', e => {
-    L.DomEvent.stopPropagation(e); // prevent map click from also firing
-    if (currentDrawMode) return;
-    if (_areaClickTimer) return; // second click of a dblclick sequence — ignore
-    _areaClickTimer = setTimeout(() => {
-      _areaClickTimer = null;
-      const hid = uid();
-      housesRef.child(hid).set({ id: hid, lat: e.latlng.lat, lng: e.latlng.lng, name: '', rating: 0, notes: '', link: '' });
-      setTimeout(() => openModal(hid), 300);
-    }, 260);
-  });
-
-  // Double click on area → open area settings popup
-  layer.on('dblclick', e => {
-    L.DomEvent.stopPropagation(e); // prevent map zoom
-    if (_areaClickTimer) { clearTimeout(_areaClickTimer); _areaClickTimer = null; }
-    const cur = areaCache[data.id]?.data || data;
-    L.popup({ minWidth: 220 })
-      .setLatLng(e.latlng)
-      .setContent(buildAreaPopupHtml(cur))
-      .openOn(map);
-  });
-
-  drawnItems.addLayer(layer);
-  areaCache[data.id] = { data, layer };
-  renderSidebarWijken();
-}
-
-window.saveAreaName = function(id) {
-  const val = document.getElementById('ap-name-' + id)?.value || '';
-  areasRef.child(id).update({ name: val });
-  map.closePopup();
-  toast('Naam opgeslagen!');
-};
-
-window.deleteArea = function(id) {
-  areasRef.child(id).remove();
-  toast('Gebied verwijderd.');
-};
-
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  HOUSE MARKERS                                                   ║
-// ╚══════════════════════════════════════════════════════════════════╝
-function houseIcon() {
-  return L.divIcon({
-    className: '',
-    html: `<div style="
-      width:28px;height:28px;border-radius:50%;
-      background:#fff;border:3px solid #1a1d23;
-      box-shadow:0 2px 6px rgba(0,0,0,.3);
-      display:flex;align-items:center;justify-content:center;
-      font-size:13px;line-height:1;">🏠</div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-    popupAnchor: [0, -16]
-  });
-}
-
-function renderHouse(data) {
-  if (houseCache[data.id]) {
-    map.removeLayer(houseCache[data.id].marker);
-  }
-
-  const marker = L.marker([data.lat, data.lng], { icon: houseIcon(), draggable: true });
-  marker.on('click', e => {
-    L.DomEvent.stopPropagation(e); // prevent map click placing a second house
-    openModal(data.id);
-  });
-  marker.on('dragend', () => {
-    const pos = marker.getLatLng();
-    housesRef.child(data.id).update({ lat: pos.lat, lng: pos.lng });
-    if (houseCache[data.id]) {
-      houseCache[data.id].data.lat = pos.lat;
-      houseCache[data.id].data.lng = pos.lng;
+    function getCssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     }
-  });
-  marker.addTo(map);
-  houseCache[data.id] = { data, marker };
-  renderSidebarHuizen();
-}
 
-// ── Map click → place house ──────────────────────────────────────────
-map.on('click', e => {
-  // Only place house if not drawing
-  if (currentDrawMode) return;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
 
-  const id = uid();
-  const houseData = {
-    id,
-    lat: e.latlng.lat,
-    lng: e.latlng.lng,
-    name: '',
-    rating: 0,
-    notes: '',
-    link: ''
-  };
-  housesRef.child(id).set(houseData);
-  // Immediately open modal for the new house
-  setTimeout(() => openModal(id), 300);
-});
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  MODAL                                                           ║
-// ╚══════════════════════════════════════════════════════════════════╝
-const overlay   = document.getElementById('modal-overlay');
-const mTitle    = document.getElementById('modal-title');
-const mName     = document.getElementById('m-name');
-const mNotes    = document.getElementById('m-notes');
-const mLink     = document.getElementById('m-link');
-const mSave     = document.getElementById('m-save');
-const mDelete   = document.getElementById('m-delete');
-const mCancel   = document.getElementById('m-cancel');
-const starEls   = document.querySelectorAll('#star-rating .star');
-let   modalRating = 0;
+    function slugifyTag(value) {
+      return String(value || '')
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9\-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
 
-function setStars(n) {
-  modalRating = n;
-  starEls.forEach(s => s.classList.toggle('filled', +s.dataset.v <= n));
-}
+    function normalizeTone(value) {
+      return value === 'negative' ? 'negative' : 'positive';
+    }
 
-starEls.forEach(s => {
-  s.addEventListener('click', () => setStars(+s.dataset.v));
-  s.addEventListener('mouseover', () => starEls.forEach(x => x.classList.toggle('filled', +x.dataset.v <= +s.dataset.v)));
-  s.addEventListener('mouseout',  () => setStars(modalRating));
-});
+    function normalizeAreaTags(tags) {
+      if (!Array.isArray(tags)) return [];
+      const seen = new Set();
+      return tags.map(tag => {
+        if (!tag || typeof tag !== 'object') return null;
+        const label = String(tag.label || '').trim();
+        if (!label) return null;
+        const id = slugifyTag(tag.id || label);
+        if (!id || seen.has(id)) return null;
+        seen.add(id);
+        return {
+          id,
+          label,
+          tone: normalizeTone(tag.tone),
+          emoji: String(tag.emoji || '🏷️').trim() || '🏷️',
+          preset: !!tag.preset
+        };
+      }).filter(Boolean);
+    }
 
-function openModal(id) {
-  const entry = houseCache[id];
-  if (!entry) return;
-  const d = entry.data;
-  modalHouseId = id;
-  mTitle.textContent = d.name ? d.name : 'Huis bewerken';
-  mName.value  = d.name  || '';
-  mNotes.value = d.notes || '';
-  mLink.value  = d.link  || '';
-  setStars(d.rating || 0);
-  mDelete.style.display = '';
-  overlay.classList.add('open');
-}
+    function getAreaTags(areaId) {
+      const layer = areaLayers[areaId];
+      if (!layer || !layer.data) return [];
+      return normalizeAreaTags(layer.data.tags || []);
+    }
 
-function closeModal() {
-  overlay.classList.remove('open');
-  modalHouseId = null;
-}
+    function saveAreaTags(areaId, tags) {
+      update(ref(db, `areas/${areaId}`), { tags: normalizeAreaTags(tags) });
+    }
 
-mSave.addEventListener('click', () => {
-  if (!modalHouseId) return;
-  const updates = {
-    name:   mName.value.trim(),
-    rating: modalRating,
-    notes:  mNotes.value.trim(),
-    link:   mLink.value.trim()
-  };
-  housesRef.child(modalHouseId).update(updates);
-  toast('Huis opgeslagen!');
-  closeModal();
-});
+    function toggleAreaPresetTag(areaId, rawTagId) {
+      const tagId = slugifyTag(rawTagId);
+      const preset = PRESET_AREA_TAGS.find(tag => tag.id === tagId);
+      if (!preset) return;
+      const current = getAreaTags(areaId);
+      const exists = current.some(tag => tag.id === tagId);
+      const next = exists
+        ? current.filter(tag => tag.id !== tagId)
+        : [...current, { ...preset }];
+      saveAreaTags(areaId, next);
+    }
 
-mDelete.addEventListener('click', () => {
-  if (!modalHouseId) return;
-  if (!confirm('Weet je zeker dat je dit huis wilt verwijderen?')) return;
-  housesRef.child(modalHouseId).remove();
-  toast('Huis verwijderd.');
-  closeModal();
-});
+    function addCustomAreaTag(areaId) {
+      const labelInput = document.getElementById(`custom-tag-label-${areaId}`);
+      const toneInput = document.getElementById(`custom-tag-tone-${areaId}`);
+      const emojiInput = document.getElementById(`custom-tag-emoji-${areaId}`);
+      if (!labelInput || !toneInput || !emojiInput) return;
 
-mCancel.addEventListener('click', closeModal);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+      const label = labelInput.value.trim();
+      const tone = normalizeTone(toneInput.value);
+      const emoji = (emojiInput.value.trim() || '🏷️').slice(0, 2);
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  SIDEBAR                                                         ║
-// ╚══════════════════════════════════════════════════════════════════╝
-const sidebar       = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebar-toggle');
+      if (!label) {
+        alert('Vul eerst een tagnaam in.');
+        labelInput.focus();
+        return;
+      }
 
-function isMobile() { return window.innerWidth <= 768; }
+      const current = getAreaTags(areaId);
+      const id = slugifyTag(label);
+      const withoutSame = current.filter(tag => tag.id !== id);
+      withoutSame.push({ id, label, tone, emoji, preset: false });
+      saveAreaTags(areaId, withoutSame);
 
-function updateToggleIcon() {
-  const open = !sidebar.classList.contains('collapsed');
-  sidebarToggle.innerHTML = isMobile()
-    ? (open ? '&#9660;' : '&#9650;')  // ▼ sluiten / ▲ openen
-    : '&#9776;';                       // ☰ desktop
-}
+      labelInput.value = '';
+      emojiInput.value = '🏷️';
+      toneInput.value = 'positive';
+    }
 
-// Start collapsed on mobile
-if (isMobile()) sidebar.classList.add('collapsed');
-updateToggleIcon();
+    function removeCustomAreaTag(areaId, rawTagId) {
+      const tagId = slugifyTag(rawTagId);
+      const current = getAreaTags(areaId);
+      saveAreaTags(areaId, current.filter(tag => tag.id !== tagId));
+    }
 
-sidebarToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('collapsed');
-  updateToggleIcon();
-});
+    function renderAreaTagChip(areaId, tag, selected) {
+      const toneClass = tag.tone === 'negative' ? 'is-negative' : 'is-positive';
+      const stateClass = selected ? 'is-selected' : 'is-unselected';
+      const affordance = selected
+        ? '<span class="tag-remove">✕</span>'
+        : '<span class="tag-plus">+</span>';
 
-window.addEventListener('resize', updateToggleIcon);
+      return `
+        <button
+          type="button"
+          class="area-tag-chip ${toneClass} ${stateClass} ${tag.preset ? '' : 'is-custom'}"
+          onclick="${tag.preset ? `toggleAreaPresetTag('${areaId}', '${tag.id}')` : `removeCustomAreaTag('${areaId}', '${tag.id}')`}"
+          title="${selected ? 'Verwijderen' : 'Toevoegen'}"
+        >
+          <span>${escapeHtml(tag.emoji)}</span>
+          <span>${escapeHtml(tag.label)}</span>
+          ${affordance}
+        </button>
+      `;
+    }
 
-// tabs
-document.querySelectorAll('.stab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('sec-' + tab.dataset.tab).classList.add('active');
-  });
-});
+    function renderSidebarAreaTags(tags) {
+      const normalized = normalizeAreaTags(tags);
+      if (!normalized.length) return '';
+      return `
+        <div class="sidebar-area-tags">
+          ${normalized.map(tag => `
+            <span class="sidebar-area-tag ${tag.tone}">${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}</span>
+          `).join('')}
+        </div>
+      `;
+    }
 
-// sort
-document.getElementById('sort-huizen').addEventListener('change', renderSidebarHuizen);
+    const drawControl = new L.Control.Draw({
+      position: 'topleft',
+      draw: {
+        polyline: false,
+        circle: false,
+        circlemarker: false,
+        marker: false,
+        polygon: {
+          allowIntersection: false,
+          showArea: true,
+          shapeOptions: { color: colorMap[selectedColor], weight: 2, fillOpacity: 0.22 }
+        },
+        rectangle: {
+          shapeOptions: { color: colorMap[selectedColor], weight: 2, fillOpacity: 0.18 }
+        }
+      },
+      edit: {
+        featureGroup: drawnItems,
+        edit: false,
+        remove: false
+      }
+    });
+    map.addControl(drawControl);
 
-// search
-document.getElementById('house-search').addEventListener('input', renderSidebarHuizen);
+    function updateDrawButtons() {
+      document.getElementById('draw-polygon').classList.toggle('active', currentDrawMode === 'polygon');
+      document.getElementById('draw-rectangle').classList.toggle('active', currentDrawMode === 'rectangle');
+      document.getElementById('draw-mode-label').textContent =
+        currentDrawMode ? `Tekenen: ${currentDrawMode}` : '';
+    }
 
-function renderSidebarWijken() {
-  const container = document.getElementById('list-wijken');
-  const areas = Object.values(areaCache);
-  if (!areas.length) {
-    container.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nog geen wijken getekend.</p>';
-    return;
-  }
-  container.innerHTML = areas.map(({ data }) => {
-    const col = COLORS[data.color]?.hex || '#999';
-    const name = data.name || '<em style="color:var(--muted)">Naamloos</em>';
-    return `<div class="list-item" onclick="panToArea('${data.id}')">
-      <div class="dot" style="background:${col}"></div>
-      <div class="info">
-        <div class="name">${name}</div>
-        <div class="sub">${COLORS[data.color]?.label || ''}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
+    function setSelectedColor(color) {
+      selectedColor = color;
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.color === color);
+      });
+    }
 
-window.panToArea = function(id) {
-  const entry = areaCache[id];
-  if (!entry) return;
-  try { map.fitBounds(entry.layer.getBounds(), { padding: [40, 40] }); }
-  catch(e) {}
-};
+    document.querySelectorAll('.color-btn').forEach(btn => {
+      btn.addEventListener('click', () => setSelectedColor(btn.dataset.color));
+    });
 
-function renderSidebarHuizen() {
-  const container = document.getElementById('list-huizen');
-  const q = document.getElementById('house-search').value.toLowerCase();
-  const sort = document.getElementById('sort-huizen').value;
+    document.getElementById('draw-polygon').addEventListener('click', () => {
+      currentDrawMode = 'polygon';
+      updateDrawButtons();
+      new L.Draw.Polygon(map, {
+        allowIntersection: false,
+        showArea: true,
+        shapeOptions: { color: colorMap[selectedColor], weight: 2, fillOpacity: 0.22 }
+      }).enable();
+    });
 
-  let houses = Object.values(houseCache).map(h => h.data);
+    document.getElementById('draw-rectangle').addEventListener('click', () => {
+      currentDrawMode = 'rectangle';
+      updateDrawButtons();
+      new L.Draw.Rectangle(map, {
+        shapeOptions: { color: colorMap[selectedColor], weight: 2, fillOpacity: 0.18 }
+      }).enable();
+    });
 
-  if (q) houses = houses.filter(h =>
-    (h.name  || '').toLowerCase().includes(q) ||
-    (h.notes || '').toLowerCase().includes(q)
-  );
+    map.on(L.Draw.Event.CREATED, (e) => {
+      const layer = e.layer;
+      const type = e.layerType;
+      const color = selectedColor;
 
-  houses.sort((a, b) => {
-    if (sort === 'rating-desc') return (b.rating||0) - (a.rating||0);
-    if (sort === 'rating-asc')  return (a.rating||0) - (b.rating||0);
-    return (a.name||'').localeCompare(b.name||'', 'nl');
-  });
+      const areaRef = push(areasRef);
+      const id = areaRef.key;
 
-  if (!houses.length) {
-    container.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Geen huizen gevonden.</p>';
-    return;
-  }
+      const latlngs = type === 'rectangle'
+        ? layer.getLatLngs()[0]
+        : layer.getLatLngs()[0];
 
-  container.innerHTML = houses.map(d => {
-    const name  = d.name  || '<em style="color:var(--muted)">Naamloos huis</em>';
-    const notes = d.notes ? d.notes.slice(0, 60) + (d.notes.length > 60 ? '…' : '') : '';
-    return `<div class="list-item" onclick="panToHouse('${d.id}')">
-      <div style="font-size:20px;flex-shrink:0">🏠</div>
-      <div class="info">
-        <div class="name">${name}</div>
-        <div class="stars-sm">${starsHtml(d.rating||0, 12)}</div>
-        ${notes ? `<div class="sub">${notes}</div>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-}
+      const areaData = {
+        id,
+        color,
+        name: 'Nieuwe wijk',
+        type,
+        latlngs: JSON.stringify(latlngs),
+        tags: []
+      };
 
-window.panToHouse = function(id) {
-  const entry = houseCache[id];
-  if (!entry) return;
-  map.setView([entry.data.lat, entry.data.lng], 16);
-  openModal(id);
-};
+      set(areaRef, areaData);
+      currentDrawMode = null;
+      updateDrawButtons();
+    });
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  FIREBASE REALTIME LISTENERS                                     ║
-// ╚══════════════════════════════════════════════════════════════════╝
+    function buildAreaPopupHtml(data) {
+      const selectedTags = normalizeAreaTags(data.tags || []);
+      const selectedTagIds = new Set(selectedTags.map(tag => tag.id));
+      const presetTagsHtml = PRESET_AREA_TAGS.map(tag => renderAreaTagChip(data.id, tag, selectedTagIds.has(tag.id))).join('');
+      const customTags = selectedTags.filter(tag => !tag.preset);
 
-// ── AREAS ────────────────────────────────────────────────────────────
-areasRef.on('child_added',   snap => { renderArea(snap.val()); });
-areasRef.on('child_changed', snap => { renderArea(snap.val()); });
-areasRef.on('child_removed', snap => {
-  const id = snap.val().id;
-  if (areaCache[id]) {
-    drawnItems.removeLayer(areaCache[id].layer);
-    delete areaCache[id];
-    renderSidebarWijken();
-  }
-});
+      const selectedTagsPreview = selectedTags.length
+        ? `<div class="area-tags-selected">${selectedTags.map(tag => `
+            <span class="sidebar-area-tag ${tag.tone}">${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}</span>
+          `).join('')}</div>`
+        : '<div class="area-tags-empty">Nog geen tags gekozen.</div>';
 
-// ── HOUSES ───────────────────────────────────────────────────────────
-housesRef.on('child_added',   snap => { renderHouse(snap.val()); });
-housesRef.on('child_changed', snap => {
-  renderHouse(snap.val());
-  // If the modal is open for this house, refresh the title
-  if (modalHouseId === snap.val().id && overlay.classList.contains('open')) {
-    mTitle.textContent = snap.val().name || 'Huis bewerken';
-  }
-});
-housesRef.on('child_removed', snap => {
-  const id = snap.val().id;
-  if (houseCache[id]) {
-    map.removeLayer(houseCache[id].marker);
-    delete houseCache[id];
-    renderSidebarHuizen();
-  }
-});
+      const customTagsHtml = customTags.length
+        ? `<div class="area-tags-selected">${customTags.map(tag => renderAreaTagChip(data.id, tag, true)).join('')}</div>`
+        : '<div class="area-tags-empty">Nog geen eigen tags toegevoegd.</div>';
 
-// ── Adjust map when sidebar opens/closes ─────────────────────────────
-const observer = new MutationObserver(() => {
-  setTimeout(() => map.invalidateSize(), 260);
-});
-observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+      return `
+        <div class="area-popup">
+          <h4>Wijk bewerken</h4>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input id="area-name-${data.id}" value="${escapeHtml(data.name || '')}" placeholder="Wijknaam" />
+            <button class="save-btn" onclick="saveAreaName('${data.id}')">Opslaan</button>
+          </div>
 
-// Initial sidebar render (empty state)
-renderSidebarWijken();
-renderSidebarHuizen();
-</script>
+          <div class="area-tags-section">
+            <div class="area-tags-title">Gekozen tags</div>
+            ${selectedTagsPreview}
+          </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
+          <div class="area-tags-section">
+            <div class="area-tags-title">Snelle tags</div>
+            <div class="area-tags-list">${presetTagsHtml}</div>
+          </div>
 
-STAP-VOOR-STAP INSTRUCTIES (NEDERLANDS)
-════════════════════════════════════════════════════════════════════════
+          <div class="area-tags-section">
+            <div class="area-tags-title">Eigen tag toevoegen</div>
+            <div class="custom-tag-box">
+              <div class="custom-tag-row">
+                <input id="custom-tag-label-${data.id}" type="text" placeholder="Bijv. dichtbij tram" />
+                <input id="custom-tag-emoji-${data.id}" class="emoji-input" type="text" value="🏷️" placeholder="🏷️" />
+              </div>
+              <div class="custom-tag-row">
+                <select id="custom-tag-tone-${data.id}">
+                  <option value="positive">Positief</option>
+                  <option value="negative">Negatief</option>
+                </select>
+                <button type="button" onclick="addCustomAreaTag('${data.id}')">Tag toevoegen</button>
+              </div>
+              ${customTagsHtml}
+            </div>
+          </div>
 
-────────────────────────────────────────────────────────────────────────
-STAP 1 – MAAK EEN GRATIS FIREBASE-PROJECT AAN
-────────────────────────────────────────────────────────────────────────
-1. Ga naar https://console.firebase.google.com en log in met een
-   Google-account (bijv. Gmail).
+          <button class="del-btn" onclick="deleteArea('${data.id}')">Verwijder wijk</button>
+          <div style="margin-top:8px; font-size:12px; color:var(--muted);">Tip: dubbelklik / dubbeltap op de vorm om naam en tags aan te passen.</div>
+        </div>
+      `;
+    }
 
-2. Klik op "Project toevoegen" (of "Add project").
+    function parseLatLngs(latlngs) {
+      try {
+        return JSON.parse(latlngs);
+      } catch (e) {
+        return [];
+      }
+    }
 
-3. Geef het project een naam, bijv. "huis-zoeken-denhaag".
-   Klik op "Doorgaan". Zet Google Analytics UIT (niet nodig).
-   Klik op "Project aanmaken".
+    function makeAreaLayer(data) {
+      const latlngs = parseLatLngs(data.latlngs);
+      const color = colorMap[data.color] || colorMap.groen;
 
-4. In het linkermenu van de Firebase-console: klik op "Realtime Database".
+      let layer;
+      if (data.type === 'rectangle') {
+        layer = L.polygon(latlngs, { color, weight: 2, fillOpacity: 0.18 });
+      } else {
+        layer = L.polygon(latlngs, { color, weight: 2, fillOpacity: 0.22 });
+      }
 
-5. Klik op "Database aanmaken" → kies regio "europe-west1 (Belgium)".
+      layer.data = {
+        ...data,
+        tags: normalizeAreaTags(data.tags || [])
+      };
 
-6. Kies "Starten in testmodus" (zodat jij en je partner zonder login
-   kunnen lezen/schrijven). Klik op "Inschakelen".
-   ⚠️  In testmodus is de database 30 dagen openbaar toegankelijk.
-   Daarna moet je de beveiligingsregels handmatig verlengen of aanpassen.
+      layer.on('dblclick', () => {
+        layer.bindPopup(buildAreaPopupHtml(layer.data), { maxWidth: 360 }).openPopup();
+      });
 
-────────────────────────────────────────────────────────────────────────
-STAP 2 – KOPIEER DE FIREBASE-CONFIGURATIE NAAR DIT BESTAND
-────────────────────────────────────────────────────────────────────────
-1. Klik in de Firebase-console linksboven op het tandwiel ⚙️ naast
-   "Projectoverzicht" → kies "Projectinstellingen".
+      let lastTap = 0;
+      layer.on('click', () => {
+        const now = Date.now();
+        if (now - lastTap < 350) {
+          layer.bindPopup(buildAreaPopupHtml(layer.data), { maxWidth: 360 }).openPopup();
+        }
+        lastTap = now;
+      });
 
-2. Scroll naar "Uw apps". Klik op het "</>" (web) icoontje om een
-   web-app te registreren. Geef het de naam "huis-zoeken".
-   Je hoeft Firebase Hosting NIET aan te zetten. Klik op "App registreren".
+      return layer;
+    }
 
-3. Je ziet nu een blok JavaScript-code met `firebaseConfig = { ... }`.
-   Kopieer de waarden van apiKey, authDomain, databaseURL, projectId,
-   storageBucket, messagingSenderId en appId.
+    function renderArea(data) {
+      if (areaLayers[data.id]) {
+        drawnItems.removeLayer(areaLayers[data.id]);
+        map.removeLayer(areaLayers[data.id]);
+      }
 
-4. Open dit bestand (index.html) in een teksteditor (bijv. Kladblok,
-   VS Code, of Notepad++).
+      const layer = makeAreaLayer(data);
+      areaLayers[data.id] = layer;
+      drawnItems.addLayer(layer);
+      layer.addTo(map);
+      renderAreaList();
+    }
 
-5. Zoek het stuk:
-       const firebaseConfig = {
-         apiKey:      "JOUW_API_KEY",
-         ...
-       };
-   Vervang elk "JOUW_…"-waarde door jouw eigen waarde uit stap 3.
+    function deleteArea(id) {
+      if (!confirm('Weet je zeker dat je deze wijk wilt verwijderen?')) return;
+      remove(ref(db, `areas/${id}`));
+    }
 
-6. Sla het bestand op.
+    function saveAreaName(id) {
+      const input = document.getElementById(`area-name-${id}`);
+      if (!input) return;
+      update(ref(db, `areas/${id}`), { name: input.value.trim() || 'Naamloze wijk' });
+      showToast('Wijk opgeslagen');
+    }
 
-────────────────────────────────────────────────────────────────────────
-STAP 3 – MAAK EEN GITHUB-REPOSITORY AAN EN ZET GITHUB PAGES AAN
-────────────────────────────────────────────────────────────────────────
-1. Ga naar https://github.com en maak een gratis account aan als je
-   er nog geen hebt.
+    function renderAreaList() {
+      const list = document.getElementById('area-list');
+      const items = Object.values(areaLayers).map(layer => layer.data);
 
-2. Klik rechtsboven op "+" → "New repository".
+      list.innerHTML = '';
 
-3. Geef de repository een naam, bijv. "huis-zoeken".
-   Kies "Public" (verplicht voor gratis GitHub Pages).
-   Zet een vinkje bij "Add a README file".
-   Klik op "Create repository".
+      if (!items.length) {
+        list.innerHTML = `<div class="sub" style="padding:8px;">Nog geen wijken toegevoegd.</div>`;
+        return;
+      }
 
-4. Je bent nu op de repository-pagina. Klik bovenaan op "Settings".
+      items.forEach(a => {
+        const latlngs = parseLatLngs(a.latlngs);
+        const layer = areaLayers[a.id];
+        if (!layer || !latlngs.length) return;
 
-5. Scroll in het linkermenu naar "Pages".
+        const bounds = layer.getBounds();
+        const kleur = colorMap[a.color] || colorMap.groen;
 
-6. Onder "Build and deployment" → "Source": kies "Deploy from a branch".
-   Kies branch "main" en map "/ (root)". Klik op "Save".
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <div class="dot" style="background:${kleur};"></div>
+          <div class="info">
+            <div class="name">${escapeHtml(a.name || 'Naamloze wijk')}</div>
+            <div class="sub">${escapeHtml(a.type || 'shape')} · ${Math.round(bounds.getCenter().lat*1000)/1000}, ${Math.round(bounds.getCenter().lng*1000)/1000}</div>
+            ${renderSidebarAreaTags(a.tags)}
+          </div>
+        `;
+        item.addEventListener('click', () => {
+          map.fitBounds(layer.getBounds(), { padding: [24, 24] });
+          layer.bindPopup(buildAreaPopupHtml(layer.data), { maxWidth: 360 }).openPopup();
+        });
+        list.appendChild(item);
+      });
+    }
 
-────────────────────────────────────────────────────────────────────────
-STAP 4 – UPLOAD DIT BESTAND EN ZET DE APP LIVE
-────────────────────────────────────────────────────────────────────────
-1. Ga naar jouw repository op GitHub (bijv. github.com/JOUW_NAAM/huis-zoeken).
+    function createHouseIcon(rating = 0) {
+      const color = rating >= 4 ? '#16a34a' : rating >= 3 ? '#f59e0b' : '#ef4444';
+      return L.divIcon({
+        className: 'house-circle-icon',
+        html: `<div style="
+          width:18px;height:18px;border-radius:50%;
+          background:${color};
+          border:2px solid white;
+          box-shadow:0 1px 4px rgba(0,0,0,.35);
+        "></div>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
+      });
+    }
 
-2. Klik op "Add file" → "Upload files".
+    function renderStarsSm(rating) {
+      const full = Math.max(0, Math.min(5, Number(rating || 0)));
+      return '★'.repeat(full) + '☆'.repeat(5 - full);
+    }
 
-3. Sleep het bestand index.html naar het uploadvenster, of klik op
-   "choose your files" en selecteer het.
+    function openHouseModal(house = null, latlng = null) {
+      selectedHouseId = house?.id || null;
+      selectedHouseRating = Number(house?.rating || 0);
 
-4. Klik onderaan op "Commit changes".
+      document.getElementById('modal-title').textContent = house ? 'Huis bewerken' : 'Huis toevoegen';
+      document.getElementById('house-name').value = house?.name || '';
+      document.getElementById('house-notes').value = house?.notes || '';
+      document.getElementById('house-link').value = house?.link || '';
+      document.getElementById('delete-house').style.display = house ? 'inline-block' : 'none';
 
-5. Wacht 1–2 minuten. Ga dan naar:
-       https://JOUW_NAAM.github.io/huis-zoeken/
-   De app is nu live! Deel deze URL met je partner.
+      updateStarUi();
 
-6. Beide gebruikers zien dezelfde kaart in real-time. Teken een wijk
-   of voeg een huis toe en het verschijnt direct bij de ander.
+      document.getElementById('modal-overlay').classList.add('open');
+      document.getElementById('save-house').onclick = async () => {
+        const payload = {
+          name: document.getElementById('house-name').value.trim(),
+          notes: document.getElementById('house-notes').value.trim(),
+          link: document.getElementById('house-link').value.trim(),
+          rating: selectedHouseRating
+        };
 
-════════════════════════════════════════════════════════════════════════
-TIPS
-════════════════════════════════════════════════════════════════════════
-• Als de kaart leeg blijft na het invullen van de Firebase-config,
-  controleer dan in de browserconsole (F12) op foutmeldingen.
-• Zorg dat de databaseURL exact overeenkomt met wat Firebase toont
-  (inclusief "https://" en "-default-rtdb").
-• Na 30 dagen testmodus: ga naar Firebase → Realtime Database →
-  Regels en pas de datum aan in "expires".
+        if (house) {
+          await update(ref(db, `houses/${house.id}`), payload);
+          showToast('Huis bijgewerkt');
+        } else if (latlng) {
+          const newRef = push(housesRef);
+          await set(newRef, {
+            id: newRef.key,
+            lat: latlng.lat,
+            lng: latlng.lng,
+            ...payload
+          });
+          showToast('Huis toegevoegd');
+        }
+        closeHouseModal();
+      };
 
-════════════════════════════════════════════════════════════════════════
--->
+      document.getElementById('delete-house').onclick = async () => {
+        if (!house) return;
+        if (!confirm('Weet je zeker dat je dit huis wilt verwijderen?')) return;
+        await remove(ref(db, `houses/${house.id}`));
+        closeHouseModal();
+        showToast('Huis verwijderd');
+      };
+    }
 
+    function closeHouseModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      selectedHouseId = null;
+    }
+
+    function updateStarUi() {
+      document.querySelectorAll('.star').forEach(star => {
+        star.classList.toggle('filled', Number(star.dataset.star) <= selectedHouseRating);
+      });
+    }
+
+    document.querySelectorAll('.star').forEach(star => {
+      star.addEventListener('click', () => {
+        selectedHouseRating = Number(star.dataset.star);
+        updateStarUi();
+      });
+    });
+
+    document.getElementById('cancel-house').addEventListener('click', closeHouseModal);
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'modal-overlay') closeHouseModal();
+    });
+
+    map.on('click', (e) => {
+      if (currentDrawMode) return;
+      openHouseModal(null, e.latlng);
+    });
+
+    function renderHouse(data) {
+      if (houseLayers[data.id]) {
+        map.removeLayer(houseLayers[data.id]);
+      }
+
+      const marker = L.marker([data.lat, data.lng], {
+        draggable: true,
+        icon: createHouseIcon(data.rating)
+      });
+
+      marker.data = data;
+
+      marker.on('click', () => openHouseModal(data));
+      marker.on('dragend', async (e) => {
+        const ll = e.target.getLatLng();
+        await update(ref(db, `houses/${data.id}`), { lat: ll.lat, lng: ll.lng });
+        showToast('Huis verplaatst');
+      });
+
+      marker.addTo(map);
+      houseLayers[data.id] = marker;
+      renderHouseList();
+    }
+
+    function renderHouseList() {
+      const search = document.getElementById('house-search').value.trim().toLowerCase();
+      const sort = document.getElementById('house-sort').value;
+      const list = document.getElementById('house-list');
+
+      let items = Object.values(houseLayers).map(layer => layer.data);
+
+      if (search) {
+        items = items.filter(h => {
+          return [h.name, h.notes, h.link].some(v => String(v || '').toLowerCase().includes(search));
+        });
+      }
+
+      items.sort((a, b) => {
+        if (sort === 'rating-desc') return (b.rating || 0) - (a.rating || 0);
+        if (sort === 'rating-asc') return (a.rating || 0) - (b.rating || 0);
+        if (sort === 'name-desc') return String(b.name || '').localeCompare(String(a.name || ''));
+        return String(a.name || '').localeCompare(String(b.name || ''));
+      });
+
+      list.innerHTML = '';
+
+      if (!items.length) {
+        list.innerHTML = `<div class="sub" style="padding:8px;">Nog geen huizen gevonden.</div>`;
+        return;
+      }
+
+      items.forEach(h => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <div class="dot" style="background:${h.rating >= 4 ? '#16a34a' : h.rating >= 3 ? '#f59e0b' : '#ef4444'};"></div>
+          <div class="info">
+            <div class="name">${escapeHtml(h.name || 'Naamloos huis')}</div>
+            <div class="sub">${escapeHtml(h.notes || '')}</div>
+            <div class="stars-sm">${renderStarsSm(h.rating || 0)}</div>
+          </div>
+        `;
+        item.addEventListener('click', () => {
+          const layer = houseLayers[h.id];
+          if (!layer) return;
+          map.setView(layer.getLatLng(), Math.max(map.getZoom(), 15));
+          openHouseModal(h);
+        });
+        list.appendChild(item);
+      });
+    }
+
+    document.getElementById('house-search').addEventListener('input', renderHouseList);
+    document.getElementById('house-sort').addEventListener('change', renderHouseList);
+
+    document.querySelectorAll('.stab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`${tab.dataset.tab}-section`).classList.add('active');
+      });
+    });
+
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+    });
+
+    document.getElementById('sidebar-handle').addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+    });
+
+    onChildAdded(areasRef, snap => renderArea(snap.val()));
+    onChildChanged(areasRef, snap => renderArea(snap.val()));
+    onChildRemoved(areasRef, snap => {
+      const id = snap.key;
+      if (areaLayers[id]) {
+        drawnItems.removeLayer(areaLayers[id]);
+        map.removeLayer(areaLayers[id]);
+        delete areaLayers[id];
+      }
+      renderAreaList();
+    });
+
+    onChildAdded(housesRef, snap => renderHouse(snap.val()));
+    onChildChanged(housesRef, snap => renderHouse(snap.val()));
+    onChildRemoved(housesRef, snap => {
+      const id = snap.key;
+      if (houseLayers[id]) {
+        map.removeLayer(houseLayers[id]);
+        delete houseLayers[id];
+      }
+      renderHouseList();
+    });
+
+    window.saveAreaName = saveAreaName;
+    window.deleteArea = deleteArea;
+    window.toggleAreaPresetTag = toggleAreaPresetTag;
+    window.addCustomAreaTag = addCustomAreaTag;
+    window.removeCustomAreaTag = removeCustomAreaTag;
+  </script>
 </body>
 </html>
