@@ -33,10 +33,6 @@
       color: var(--text);
     }
 
-    body.sidebar-collapsed .area-panel {
-      width: min(760px, calc(100vw - 48px));
-    }
-
     #toolbar {
       position: fixed; top: 0; left: 0; right: 0; height: var(--toolbar-h);
       background: var(--card); border-bottom: 1px solid var(--border);
@@ -210,6 +206,34 @@
       pointer-events: auto;
     }
     .area-overlay.open { display: flex !important; }
+    .area-overlay.editing-desktop {
+      background: transparent;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0 24px 20px 24px;
+      pointer-events: none;
+    }
+    .area-overlay.editing-desktop .area-panel {
+      pointer-events: auto;
+      width: min(760px, calc(100vw - var(--sidebar-w) - 48px));
+      max-width: 760px;
+      max-height: none;
+      overflow: visible;
+      border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    }
+    .area-overlay.editing-desktop .area-popup {
+      display: none;
+    }
+    .area-overlay.editing-desktop .area-editor-header {
+      position: static;
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .area-overlay.editing-desktop .area-editor-subtitle {
+      display: none;
+    }
 
     .area-panel {
       width: min(760px, calc(100vw - var(--sidebar-w) - 48px));
@@ -475,12 +499,58 @@
       gap: 8px;
     }
 
-    .leaflet-container.area-geometry-editing {
-      cursor: crosshair;
+    .desktop-edit-bar,
+    .mobile-edit-bar {
+      display: none;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .desktop-edit-bar.open,
+    .mobile-edit-bar.open { display: flex; }
+
+    .desktop-edit-title,
+    .mobile-edit-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .desktop-edit-sub,
+    .mobile-edit-sub {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .desktop-edit-actions,
+    .mobile-edit-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .desktop-edit-actions button,
+    .mobile-edit-actions button {
+      flex: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .desktop-save-btn,
+    .mobile-save-btn {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .desktop-cancel-btn,
+    .mobile-cancel-btn {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
     }
 
     .mobile-edit-bar {
-      display: none;
       position: fixed;
       left: 12px;
       right: 12px;
@@ -491,45 +561,22 @@
       border-radius: 16px;
       box-shadow: 0 10px 32px rgba(0,0,0,.18);
       padding: 12px;
-      gap: 10px;
-      flex-direction: column;
-    }
-    .mobile-edit-bar.open { display: flex; }
-
-    .mobile-edit-title {
-      font-size: 13px;
-      font-weight: 700;
     }
 
-    .mobile-edit-sub {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.4;
+    .leaflet-container.area-geometry-editing {
+      cursor: crosshair;
+      touch-action: none;
     }
 
-    .mobile-edit-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .mobile-edit-actions button {
-      flex: 1;
-      border: none;
-      border-radius: 10px;
-      padding: 11px 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .mobile-save-btn {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .mobile-cancel-btn {
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
+    .leaflet-editing-icon {
+      width: 16px !important;
+      height: 16px !important;
+      margin-left: -8px !important;
+      margin-top: -8px !important;
+      border-radius: 50% !important;
+      border: 3px solid #ffffff !important;
+      background: var(--accent) !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,.35) !important;
     }
 
     #toast {
@@ -647,6 +694,16 @@
       .area-editor-toprow { align-items: flex-start; }
       .area-editor-title { font-size: 18px; }
       .area-editor-close { min-width: 88px; }
+
+      .area-overlay.editing-desktop {
+        display: none !important;
+      }
+
+      .leaflet-container.area-geometry-editing .leaflet-pane,
+      .leaflet-container.area-geometry-editing .leaflet-map-pane,
+      .leaflet-container.area-geometry-editing .leaflet-zoom-animated {
+        transition: none !important;
+      }
     }
   </style>
 </head>
@@ -780,6 +837,15 @@
         <strong>Gebied bewerken staat aan</strong>
         Sleep de zichtbare punten of hoekpunten op de kaart. Klik daarna op “Bewerking opslaan”.
       </div>
+
+      <div id="desktop-edit-bar" class="desktop-edit-bar">
+        <div class="desktop-edit-title">Gebied bewerken</div>
+        <div class="desktop-edit-sub">Sleep de zichtbare punten op de kaart en klik daarna op opslaan.</div>
+        <div class="desktop-edit-actions">
+          <button id="desktop-cancel-edit-btn" class="desktop-cancel-btn">Annuleren</button>
+          <button id="desktop-save-edit-btn" class="desktop-save-btn">Bewerking opslaan</button>
+        </div>
+      </div>
     </div>
 
     <div class="area-popup">
@@ -789,10 +855,6 @@
 
       <button id="area-edit-geometry-btn" class="edit-btn area-main-action">
         <span>Gebied bewerken</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 20h9"/>
-          <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-        </svg>
       </button>
 
       <button id="area-save-geometry-btn" class="save-btn area-main-action" style="display:none">
@@ -844,7 +906,7 @@
 
 <div id="mobile-edit-bar" class="mobile-edit-bar">
   <div class="mobile-edit-title">Gebied bewerken</div>
-  <div class="mobile-edit-sub">Sleep de zichtbare punten van het gebied. Sla daarna op of annuleer.</div>
+  <div class="mobile-edit-sub">Sleep de blauwe punten van het gebied. De kaart slepen staat tijdelijk uit.</div>
   <div class="mobile-edit-actions">
     <button id="mobile-cancel-edit-btn" class="mobile-cancel-btn">Annuleren</button>
     <button id="mobile-save-edit-btn" class="mobile-save-btn">Opslaan</button>
@@ -955,7 +1017,11 @@ const COLORS = {
   rood:  { hex: '#F44336', label: 'Rood – Hier willen we niet wonen' },
 };
 
-const map = L.map('map', { zoomControl: true, doubleClickZoom: false }).setView([52.0705, 4.3007], 13);
+const map = L.map('map', {
+  zoomControl: true,
+  doubleClickZoom: false,
+  touchZoom: true
+}).setView([52.0705, 4.3007], 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -972,7 +1038,6 @@ const areaCache  = {};
 const houseCache = {};
 
 let modalHouseId = null;
-
 let activeAreaId = null;
 let activeAreaEditId = null;
 let activeAreaEditorMode = false;
@@ -1180,6 +1245,9 @@ const areaCustomTagsEmpty = document.getElementById('area-custom-tags-empty');
 const areaDeleteBtn = document.getElementById('area-delete-btn');
 const areaCloseBtn = document.getElementById('area-close-btn');
 const areaAddCustomTagBtn = document.getElementById('area-add-custom-tag-btn');
+const desktopEditBar = document.getElementById('desktop-edit-bar');
+const desktopSaveEditBtn = document.getElementById('desktop-save-edit-btn');
+const desktopCancelEditBtn = document.getElementById('desktop-cancel-edit-btn');
 const mobileEditBar = document.getElementById('mobile-edit-bar');
 const mobileSaveEditBtn = document.getElementById('mobile-save-edit-btn');
 const mobileCancelEditBtn = document.getElementById('mobile-cancel-edit-btn');
@@ -1190,8 +1258,33 @@ function setAreaOverlayOpen(open) {
   areaOverlay.style.display = open ? 'flex' : 'none';
 }
 
+function setDesktopEditBarOpen(open) {
+  desktopEditBar.classList.toggle('open', open);
+  areaOverlay.classList.toggle('editing-desktop', open && !isMobile());
+}
+
 function setMobileEditBarOpen(open) {
   mobileEditBar.classList.toggle('open', open);
+}
+
+function lockMapForGeometryEdit(lock) {
+  if (lock) {
+    map.dragging.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
+    map.touchZoom.disable();
+    if (map.tap) map.tap.disable();
+  } else {
+    map.dragging.enable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.enable();
+    map.boxZoom.enable();
+    map.keyboard.enable();
+    map.touchZoom.enable();
+    if (map.tap) map.tap.enable();
+  }
 }
 
 function syncAreaNameSaveButton() {
@@ -1215,8 +1308,8 @@ function renderAreaEditor() {
 
   areaEditStatus.classList.toggle('show', activeAreaEditId === activeAreaId && !isMobile());
   areaEditGeometryBtn.style.display = activeAreaEditId === activeAreaId ? 'none' : '';
-  areaSaveGeometryBtn.style.display = activeAreaEditId === activeAreaId && !isMobile() ? '' : 'none';
-  areaCancelGeometryBtn.style.display = activeAreaEditId === activeAreaId && !isMobile() ? '' : 'none';
+  areaSaveGeometryBtn.style.display = 'none';
+  areaCancelGeometryBtn.style.display = 'none';
 
   if (selectedTags.length) {
     areaSelectedTags.innerHTML = selectedTags.map(tag => `
@@ -1247,18 +1340,12 @@ function openAreaEditor(areaId) {
   activeAreaId = areaId;
   renderAreaEditor();
   setAreaOverlayOpen(true);
-}
-
-function closeAreaEditor(options = {}) {
-  const keepEditMode = !!options.keepEditMode;
-  setAreaOverlayOpen(false);
-  if (!keepEditMode) {
-    stopAreaGeometryEdit(false);
-  }
+  setDesktopEditBarOpen(false);
 }
 
 function fullyCloseAreaEditor() {
   setAreaOverlayOpen(false);
+  setDesktopEditBarOpen(false);
   setMobileEditBarOpen(false);
   stopAreaGeometryEdit(false);
   activeAreaId = null;
@@ -1267,7 +1354,9 @@ function fullyCloseAreaEditor() {
 window.closeAreaEditor = fullyCloseAreaEditor;
 
 areaOverlay.addEventListener('click', (e) => {
-  if (e.target === areaOverlay) fullyCloseAreaEditor();
+  if (e.target === areaOverlay && !areaOverlay.classList.contains('editing-desktop')) {
+    fullyCloseAreaEditor();
+  }
 });
 
 areaCloseBtn.addEventListener('click', fullyCloseAreaEditor);
@@ -1321,7 +1410,15 @@ function enableLayerEditHandles(layer, type) {
 
     if (layer.editing && layer.editing._verticesHandlers) {
       layer.editing._verticesHandlers.forEach(handler => {
+        if (handler && handler._markerGroup && map && !map.hasLayer(handler._markerGroup)) {
+          map.addLayer(handler._markerGroup);
+        }
         if (handler && handler.addHooks) handler.addHooks();
+        if (handler && handler._markers) {
+          handler._markers.forEach(marker => {
+            if (marker && marker.dragging) marker.dragging.enable();
+          });
+        }
       });
     }
 
@@ -1332,7 +1429,10 @@ function enableLayerEditHandles(layer, type) {
 }
 
 function stopAreaGeometryEdit(restoreOriginal = false) {
-  if (!activeAreaEditId) return;
+  if (!activeAreaEditId) {
+    lockMapForGeometryEdit(false);
+    return;
+  }
 
   const entry = areaCache[activeAreaEditId];
   if (entry) {
@@ -1360,7 +1460,9 @@ function stopAreaGeometryEdit(restoreOriginal = false) {
   activeAreaEditId = null;
   activeAreaEditorMode = false;
   map.getContainer().classList.remove('area-geometry-editing');
+  setDesktopEditBarOpen(false);
   setMobileEditBarOpen(false);
+  lockMapForGeometryEdit(false);
 }
 
 function startAreaGeometryEdit(id) {
@@ -1386,20 +1488,24 @@ function startAreaGeometryEdit(id) {
   entry.editorInstance = editor;
   activeAreaEditId = id;
   activeAreaEditorMode = true;
-  suppressNextMapClickUntil = Date.now() + 500;
+  suppressNextMapClickUntil = Date.now() + 800;
   map.getContainer().classList.add('area-geometry-editing');
+  lockMapForGeometryEdit(true);
 
   try {
-    map.fitBounds(layer.getBounds(), { padding: isMobile() ? [50, 50] : [60, 60] });
+    map.fitBounds(layer.getBounds(), { padding: isMobile() ? [60, 60] : [70, 70] });
   } catch (e) {}
 
   if (isMobile()) {
-    closeAreaEditor({ keepEditMode: true });
+    setAreaOverlayOpen(false);
+    setDesktopEditBarOpen(false);
     setMobileEditBarOpen(true);
-    toast('Sleep nu de punten van het gebied.');
+    toast('Sleep de blauwe punten van het gebied.');
   } else {
+    setAreaOverlayOpen(true);
+    setDesktopEditBarOpen(true);
     renderAreaEditor();
-    toast('Sleep nu de punten van het gebied.');
+    toast('Sleep de blauwe punten van het gebied.');
   }
 }
 
@@ -1414,7 +1520,9 @@ function saveAreaGeometry(id) {
 
   stopAreaGeometryEdit(false);
 
-  if (activeAreaId === id) {
+  if (isMobile()) {
+    setAreaOverlayOpen(false);
+  } else if (activeAreaId === id) {
     openAreaEditor(id);
   }
 
@@ -1425,7 +1533,9 @@ function cancelAreaGeometryEdit(id) {
   if (activeAreaEditId !== id) return;
   stopAreaGeometryEdit(true);
 
-  if (activeAreaId === id) {
+  if (isMobile()) {
+    setAreaOverlayOpen(false);
+  } else if (activeAreaId === id) {
     openAreaEditor(id);
   }
 
@@ -1443,6 +1553,16 @@ areaSaveGeometryBtn.addEventListener('click', () => {
 });
 
 areaCancelGeometryBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  cancelAreaGeometryEdit(activeAreaId);
+});
+
+desktopSaveEditBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  saveAreaGeometry(activeAreaId);
+});
+
+desktopCancelEditBtn.addEventListener('click', () => {
   if (!activeAreaId) return;
   cancelAreaGeometryEdit(activeAreaId);
 });
@@ -1512,6 +1632,7 @@ function renderArea(data) {
   layer.on('dblclick', e => {
     L.DomEvent.stopPropagation(e);
     if (_areaClickTimer) { clearTimeout(_areaClickTimer); _areaClickTimer = null; }
+    if (activeAreaEditorMode) return;
     openAreaEditor(normalizedData.id);
   });
 
@@ -1526,7 +1647,7 @@ function renderArea(data) {
   renderSidebarGebieden();
   tryInitialZoomToDefaultArea();
 
-  if (activeAreaId === normalizedData.id) {
+  if (activeAreaId === normalizedData.id && !activeAreaEditorMode) {
     renderAreaEditor();
   }
 }
@@ -1554,6 +1675,7 @@ function renderHouse(data) {
   const marker = L.marker([data.lat, data.lng], { icon: houseIcon(), draggable: true });
   marker.on('click', e => {
     L.DomEvent.stopPropagation(e);
+    if (activeAreaEditorMode) return;
     openModal(data.id);
   });
   marker.on('dragend', () => {
@@ -1662,17 +1784,11 @@ function updateToggleIcon() {
     : '&#9776;';
 }
 
-function syncSidebarBodyClass() {
-  document.body.classList.toggle('sidebar-collapsed', sidebar.classList.contains('collapsed'));
-}
-
 if (isMobile()) sidebar.classList.add('collapsed');
-syncSidebarBodyClass();
 updateToggleIcon();
 
 sidebarToggle.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
-  syncSidebarBodyClass();
   updateToggleIcon();
   setTimeout(() => {
     map.invalidateSize();
@@ -1681,8 +1797,8 @@ sidebarToggle.addEventListener('click', () => {
 
 window.addEventListener('resize', () => {
   updateToggleIcon();
-  syncSidebarBodyClass();
   if (!isMobile()) setMobileEditBarOpen(false);
+  if (isMobile()) setDesktopEditBarOpen(false);
 });
 
 document.querySelectorAll('.stab').forEach(tab => {
