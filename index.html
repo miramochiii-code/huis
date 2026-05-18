@@ -125,10 +125,17 @@
 
     .list-item {
       display: flex; align-items: flex-start; gap: 10px; padding: 10px;
-      border-radius: 10px; cursor: pointer; transition: background .15s;
-      border: 1px solid transparent; margin-bottom: 6px;
+      border-radius: 12px; cursor: pointer; transition: background .15s, border-color .15s, box-shadow .15s;
+      border: 1px solid transparent; margin-bottom: 8px;
+      background: transparent;
     }
     .list-item:hover { background: var(--bg); border-color: var(--border); }
+    .list-item.active {
+      background: #eef5ff;
+      border-color: #bfd7fb;
+      box-shadow: inset 0 0 0 1px rgba(21,101,192,.08);
+    }
+
     .list-item .dot {
       width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 3px;
     }
@@ -136,6 +143,74 @@
     .list-item .name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .list-item .sub { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .stars-sm { color: #f59e0b; font-size: 12px; letter-spacing: 1px; }
+
+    .area-inline-actions {
+      display: none;
+      margin: 8px 0 10px;
+      padding: 10px;
+      border: 1px solid #d8e6fb;
+      background: #f7fbff;
+      border-radius: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .area-inline-actions.show { display: flex; }
+
+    .area-inline-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .area-inline-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .area-inline-btn.delete {
+      background: #fff4f4;
+      border-color: #f5c2c7;
+      color: #b42318;
+    }
+    .area-inline-btn.delete:hover {
+      border-color: #e11d48;
+      color: #a61b1b;
+    }
+
+    .sidebar-area-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .sidebar-area-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .sidebar-area-tag.positive {
+      background: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    .sidebar-area-tag.negative {
+      background: #ffebee;
+      color: #b71c1c;
+    }
 
     #legend {
       position: fixed; bottom: 20px; left: 20px; background: var(--card);
@@ -252,8 +327,10 @@
     .area-editor-header {
       position: sticky;
       top: 0;
-      z-index: 2;
-      background: var(--card);
+      z-index: 5;
+      background: #fff;
+      padding-top: 14px;
+      margin-top: -18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 14px;
@@ -448,33 +525,6 @@
       color: #fff;
       font-weight: 700;
       cursor: pointer;
-    }
-
-    .sidebar-area-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .sidebar-area-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 999px;
-    }
-
-    .sidebar-area-tag.positive {
-      background: #e8f5e9;
-      color: #1b5e20;
-    }
-
-    .sidebar-area-tag.negative {
-      background: #ffebee;
-      color: #b71c1c;
     }
 
     .area-delete-wrap {
@@ -688,7 +738,17 @@
         border-radius: 0 !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 16px 14px 24px;
+        padding: 0 14px 24px !important;
+        background: #fff !important;
+      }
+
+      .area-editor-header {
+        top: 0;
+        background: #fff !important;
+        padding-top: 14px !important;
+        margin-top: 0 !important;
+        position: sticky !important;
+        z-index: 8 !important;
       }
 
       .area-editor-toprow { align-items: flex-start; }
@@ -745,8 +805,8 @@
     <div class="tip">
       <strong>Gebieden tekenen:</strong> Kies een kleur → klik "Gebied tekenen" of "Rechthoek" → teken op de kaart → dubbelklik om af te ronden.<br><br>
       <strong>Huis toevoegen:</strong> Klik 1× op de kaart (ook op een getekend gebied) om een huis-markering te plaatsen.<br><br>
-      <strong>Gebied-instellingen:</strong> Dubbelklik op een getekend gebied om het gebied te bewerken, tags aan te passen of te verwijderen.<br><br>
-      <strong>Huis verplaatsen:</strong> Klik en sleep een huis-markering naar de juiste plek.
+      <strong>Gebied-instellingen:</strong> Dubbelklik op een getekend gebied of open info vanuit de sidebar.<br><br>
+      <strong>Snel bewerken:</strong> Selecteer een gebied in de sidebar en klik op “Bewerken”.
     </div>
   </div>
 </div>
@@ -769,6 +829,17 @@
 
   <div id="sidebar-body">
     <div class="section active" id="sec-gebieden">
+      <div id="gebied-inline-actions" class="area-inline-actions">
+        <button id="sidebar-edit-area-btn" class="area-inline-btn">
+          <span>✏️</span><span>Bewerken</span>
+        </button>
+        <button id="sidebar-info-area-btn" class="area-inline-btn">
+          <span>ℹ️</span><span>Info</span>
+        </button>
+        <button id="sidebar-delete-area-btn" class="area-inline-btn delete">
+          <span>🗑️</span><span>Verwijderen</span>
+        </button>
+      </div>
       <div id="list-gebieden"></div>
     </div>
 
@@ -835,12 +906,12 @@
 
       <div id="area-edit-status" class="area-edit-status">
         <strong>Gebied bewerken staat aan</strong>
-        Sleep de zichtbare punten of hoekpunten op de kaart. Klik daarna op “Bewerking opslaan”.
+        Sleep de zichtbare punten of voeg punten toe door op een lijn te tikken/klikken.
       </div>
 
       <div id="desktop-edit-bar" class="desktop-edit-bar">
         <div class="desktop-edit-title">Gebied bewerken</div>
-        <div class="desktop-edit-sub">Sleep de zichtbare punten op de kaart en klik daarna op opslaan.</div>
+        <div class="desktop-edit-sub">Sleep punten of klik op een rand om een extra punt toe te voegen.</div>
         <div class="desktop-edit-actions">
           <button id="desktop-cancel-edit-btn" class="desktop-cancel-btn">Annuleren</button>
           <button id="desktop-save-edit-btn" class="desktop-save-btn">Bewerking opslaan</button>
@@ -855,14 +926,6 @@
 
       <button id="area-edit-geometry-btn" class="edit-btn area-main-action">
         <span>Gebied bewerken</span>
-      </button>
-
-      <button id="area-save-geometry-btn" class="save-btn area-main-action" style="display:none">
-        <span>Bewerking opslaan</span>
-      </button>
-
-      <button id="area-cancel-geometry-btn" class="cancel-btn area-main-action" style="display:none">
-        <span>Bewerken annuleren</span>
       </button>
 
       <div class="area-tags-section">
@@ -906,7 +969,7 @@
 
 <div id="mobile-edit-bar" class="mobile-edit-bar">
   <div class="mobile-edit-title">Gebied bewerken</div>
-  <div class="mobile-edit-sub">Sleep de blauwe punten van het gebied. De kaart slepen staat tijdelijk uit.</div>
+  <div class="mobile-edit-sub">Sleep de blauwe punten of tik op een rand om een punt toe te voegen.</div>
   <div class="mobile-edit-actions">
     <button id="mobile-cancel-edit-btn" class="mobile-cancel-btn">Annuleren</button>
     <button id="mobile-save-edit-btn" class="mobile-save-btn">Opslaan</button>
@@ -1041,6 +1104,7 @@ let modalHouseId = null;
 let activeAreaId = null;
 let activeAreaEditId = null;
 let activeAreaEditorMode = false;
+let selectedSidebarAreaId = null;
 let suppressNextMapClickUntil = 0;
 let initialAreaZoomDone = false;
 const DEFAULT_START_AREA_NAME = 'houtwijk';
@@ -1235,8 +1299,6 @@ const areaEditStatus = document.getElementById('area-edit-status');
 const areaNameInput = document.getElementById('area-name-input');
 const areaSaveNameBtn = document.getElementById('area-save-name-btn');
 const areaEditGeometryBtn = document.getElementById('area-edit-geometry-btn');
-const areaSaveGeometryBtn = document.getElementById('area-save-geometry-btn');
-const areaCancelGeometryBtn = document.getElementById('area-cancel-geometry-btn');
 const areaSelectedTags = document.getElementById('area-selected-tags');
 const areaSelectedTagsEmpty = document.getElementById('area-selected-tags-empty');
 const areaPresetTags = document.getElementById('area-preset-tags');
@@ -1251,6 +1313,10 @@ const desktopCancelEditBtn = document.getElementById('desktop-cancel-edit-btn');
 const mobileEditBar = document.getElementById('mobile-edit-bar');
 const mobileSaveEditBtn = document.getElementById('mobile-save-edit-btn');
 const mobileCancelEditBtn = document.getElementById('mobile-cancel-edit-btn');
+const gebiedInlineActions = document.getElementById('gebied-inline-actions');
+const sidebarEditAreaBtn = document.getElementById('sidebar-edit-area-btn');
+const sidebarInfoAreaBtn = document.getElementById('sidebar-info-area-btn');
+const sidebarDeleteAreaBtn = document.getElementById('sidebar-delete-area-btn');
 
 function setAreaOverlayOpen(open) {
   areaOverlay.classList.toggle('open', open);
@@ -1294,6 +1360,21 @@ function syncAreaNameSaveButton() {
   areaSaveNameBtn.classList.toggle('show', changed);
 }
 
+function updateSidebarAreaActions() {
+  const has = !!(selectedSidebarAreaId && areaCache[selectedSidebarAreaId]);
+  gebiedInlineActions.classList.toggle('show', has);
+}
+
+function setSelectedSidebarArea(id) {
+  if (selectedSidebarAreaId === id) {
+    selectedSidebarAreaId = null;
+  } else {
+    selectedSidebarAreaId = id;
+  }
+  renderSidebarGebieden();
+  updateSidebarAreaActions();
+}
+
 function renderAreaEditor() {
   if (!activeAreaId || !areaCache[activeAreaId]) return;
   const data = areaCache[activeAreaId].data;
@@ -1308,8 +1389,6 @@ function renderAreaEditor() {
 
   areaEditStatus.classList.toggle('show', activeAreaEditId === activeAreaId && !isMobile());
   areaEditGeometryBtn.style.display = activeAreaEditId === activeAreaId ? 'none' : '';
-  areaSaveGeometryBtn.style.display = 'none';
-  areaCancelGeometryBtn.style.display = 'none';
 
   if (selectedTags.length) {
     areaSelectedTags.innerHTML = selectedTags.map(tag => `
@@ -1373,13 +1452,43 @@ areaAddCustomTagBtn.addEventListener('click', () => {
   addCustomAreaTag(activeAreaId);
 });
 
+function confirmDeleteArea(areaId) {
+  if (!areaId || !areaCache[areaId]) return;
+  const name = areaCache[areaId].data.name || 'dit gebied';
+  if (!confirm(`Weet je zeker dat je ${name} wilt verwijderen?`)) return;
+
+  if (activeAreaId === areaId) {
+    stopAreaGeometryEdit(false);
+    setAreaOverlayOpen(false);
+  }
+
+  areasRef.child(areaId).remove();
+  if (selectedSidebarAreaId === areaId) selectedSidebarAreaId = null;
+  toast('Gebied verwijderd.');
+}
+
 areaDeleteBtn.addEventListener('click', () => {
   if (!activeAreaId) return;
-  if (!confirm('Weet je zeker dat je dit gebied wilt verwijderen?')) return;
-  stopAreaGeometryEdit(false);
-  areasRef.child(activeAreaId).remove();
+  confirmDeleteArea(activeAreaId);
   fullyCloseAreaEditor();
-  toast('Gebied verwijderd.');
+});
+
+sidebarDeleteAreaBtn.addEventListener('click', () => {
+  if (!selectedSidebarAreaId) return;
+  confirmDeleteArea(selectedSidebarAreaId);
+  renderSidebarGebieden();
+  updateSidebarAreaActions();
+});
+
+sidebarInfoAreaBtn.addEventListener('click', () => {
+  if (!selectedSidebarAreaId) return;
+  openAreaEditor(selectedSidebarAreaId);
+});
+
+sidebarEditAreaBtn.addEventListener('click', () => {
+  if (!selectedSidebarAreaId) return;
+  activeAreaId = selectedSidebarAreaId;
+  startAreaGeometryEdit(selectedSidebarAreaId);
 });
 
 function flattenLatLngs(value) {
@@ -1395,6 +1504,33 @@ function captureAreaLatLngs(layer, type) {
     if (points.length >= 4) return [points.slice(0, 4)];
   }
   return raw;
+}
+
+function patchPolygonMiddleMarkers(editor) {
+  try {
+    if (!editor || !editor._verticesHandlers) return;
+    editor._verticesHandlers.forEach(handler => {
+      if (!handler || !handler._markers || handler._markers.length < 2) return;
+
+      if (handler._markerGroup && map && !map.hasLayer(handler._markerGroup)) {
+        map.addLayer(handler._markerGroup);
+      }
+
+      if (handler._createMiddleMarker) {
+        for (let i = 0; i < handler._markers.length; i++) {
+          const markerLeft = handler._markers[i];
+          const markerRight = handler._markers[(i + 1) % handler._markers.length];
+          if (markerLeft && markerRight) {
+            handler._createMiddleMarker(markerLeft, markerRight);
+          }
+        }
+      }
+
+      handler._markers.forEach(marker => {
+        if (marker && marker.dragging) marker.dragging.enable();
+      });
+    });
+  } catch (e) {}
 }
 
 function enableLayerEditHandles(layer, type) {
@@ -1420,6 +1556,7 @@ function enableLayerEditHandles(layer, type) {
           });
         }
       });
+      patchPolygonMiddleMarkers(layer.editing);
     }
 
     return layer.editing;
@@ -1488,450 +1625,10 @@ function startAreaGeometryEdit(id) {
   entry.editorInstance = editor;
   activeAreaEditId = id;
   activeAreaEditorMode = true;
+  activeAreaId = id;
   suppressNextMapClickUntil = Date.now() + 800;
   map.getContainer().classList.add('area-geometry-editing');
   lockMapForGeometryEdit(true);
 
   try {
     map.fitBounds(layer.getBounds(), { padding: isMobile() ? [60, 60] : [70, 70] });
-  } catch (e) {}
-
-  if (isMobile()) {
-    setAreaOverlayOpen(false);
-    setDesktopEditBarOpen(false);
-    setMobileEditBarOpen(true);
-    toast('Sleep de blauwe punten van het gebied.');
-  } else {
-    setAreaOverlayOpen(true);
-    setDesktopEditBarOpen(true);
-    renderAreaEditor();
-    toast('Sleep de blauwe punten van het gebied.');
-  }
-}
-
-function saveAreaGeometry(id) {
-  const entry = areaCache[id];
-  if (!entry || activeAreaEditId !== id) return;
-
-  const newLatLngs = captureAreaLatLngs(entry.layer, entry.data.type);
-  areasRef.child(id).update({
-    latlngs: JSON.stringify(newLatLngs)
-  });
-
-  stopAreaGeometryEdit(false);
-
-  if (isMobile()) {
-    setAreaOverlayOpen(false);
-  } else if (activeAreaId === id) {
-    openAreaEditor(id);
-  }
-
-  toast('Gebied bijgewerkt!');
-}
-
-function cancelAreaGeometryEdit(id) {
-  if (activeAreaEditId !== id) return;
-  stopAreaGeometryEdit(true);
-
-  if (isMobile()) {
-    setAreaOverlayOpen(false);
-  } else if (activeAreaId === id) {
-    openAreaEditor(id);
-  }
-
-  toast('Bewerken geannuleerd.');
-}
-
-areaEditGeometryBtn.addEventListener('click', () => {
-  if (!activeAreaId) return;
-  startAreaGeometryEdit(activeAreaId);
-});
-
-areaSaveGeometryBtn.addEventListener('click', () => {
-  if (!activeAreaId) return;
-  saveAreaGeometry(activeAreaId);
-});
-
-areaCancelGeometryBtn.addEventListener('click', () => {
-  if (!activeAreaId) return;
-  cancelAreaGeometryEdit(activeAreaId);
-});
-
-desktopSaveEditBtn.addEventListener('click', () => {
-  if (!activeAreaId) return;
-  saveAreaGeometry(activeAreaId);
-});
-
-desktopCancelEditBtn.addEventListener('click', () => {
-  if (!activeAreaId) return;
-  cancelAreaGeometryEdit(activeAreaId);
-});
-
-mobileSaveEditBtn.addEventListener('click', () => {
-  if (!activeAreaId) return;
-  saveAreaGeometry(activeAreaId);
-});
-
-mobileCancelEditBtn.addEventListener('click', () => {
-  if (!activeAreaId) return;
-  cancelAreaGeometryEdit(activeAreaId);
-});
-
-function tryInitialZoomToDefaultArea() {
-  if (initialAreaZoomDone) return;
-
-  const match = Object.values(areaCache).find(({ data }) =>
-    String(data.name || '').trim().toLowerCase() === DEFAULT_START_AREA_NAME
-  );
-
-  if (!match) return;
-
-  initialAreaZoomDone = true;
-  try {
-    map.fitBounds(match.layer.getBounds(), {
-      padding: isMobile() ? [30, 30] : [60, 60]
-    });
-  } catch (e) {}
-}
-
-function renderArea(data) {
-  if (areaCache[data.id]) {
-    drawnItems.removeLayer(areaCache[data.id].layer);
-  }
-
-  const normalizedData = {
-    ...data,
-    tags: normalizeAreaTags(data.tags || [])
-  };
-
-  const col = COLORS[normalizedData.color]?.hex || '#999';
-  const latlngs = JSON.parse(normalizedData.latlngs);
-
-  let layer;
-  if (normalizedData.type === 'rectangle') {
-    layer = L.rectangle(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
-  } else {
-    layer = L.polygon(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
-  }
-
-  let _areaClickTimer = null;
-  layer.on('click', e => {
-    L.DomEvent.stopPropagation(e);
-    if (currentDrawMode || activeAreaEditorMode) return;
-    if (_areaClickTimer) return;
-
-    _areaClickTimer = setTimeout(() => {
-      _areaClickTimer = null;
-      if (activeAreaEditorMode) return;
-      const hid = uid();
-      housesRef.child(hid).set({ id: hid, lat: e.latlng.lat, lng: e.latlng.lng, name: '', rating: 0, notes: '', link: '' });
-      setTimeout(() => openModal(hid), 300);
-    }, 260);
-  });
-
-  layer.on('dblclick', e => {
-    L.DomEvent.stopPropagation(e);
-    if (_areaClickTimer) { clearTimeout(_areaClickTimer); _areaClickTimer = null; }
-    if (activeAreaEditorMode) return;
-    openAreaEditor(normalizedData.id);
-  });
-
-  drawnItems.addLayer(layer);
-  areaCache[normalizedData.id] = {
-    data: normalizedData,
-    layer,
-    editorInstance: null,
-    originalLatLngsBeforeEdit: null
-  };
-
-  renderSidebarGebieden();
-  tryInitialZoomToDefaultArea();
-
-  if (activeAreaId === normalizedData.id && !activeAreaEditorMode) {
-    renderAreaEditor();
-  }
-}
-
-function houseIcon() {
-  return L.divIcon({
-    className: '',
-    html: `<div style="
-      width:28px;height:28px;border-radius:50%;
-      background:#fff;border:3px solid #1a1d23;
-      box-shadow:0 2px 6px rgba(0,0,0,.3);
-      display:flex;align-items:center;justify-content:center;
-      font-size:13px;line-height:1;">🏠</div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-    popupAnchor: [0, -16]
-  });
-}
-
-function renderHouse(data) {
-  if (houseCache[data.id]) {
-    map.removeLayer(houseCache[data.id].marker);
-  }
-
-  const marker = L.marker([data.lat, data.lng], { icon: houseIcon(), draggable: true });
-  marker.on('click', e => {
-    L.DomEvent.stopPropagation(e);
-    if (activeAreaEditorMode) return;
-    openModal(data.id);
-  });
-  marker.on('dragend', () => {
-    const pos = marker.getLatLng();
-    housesRef.child(data.id).update({ lat: pos.lat, lng: pos.lng });
-    if (houseCache[data.id]) {
-      houseCache[data.id].data.lat = pos.lat;
-      houseCache[data.id].data.lng = pos.lng;
-    }
-  });
-  marker.addTo(map);
-  houseCache[data.id] = { data, marker };
-  renderSidebarHuizen();
-}
-
-map.on('click', e => {
-  if (currentDrawMode || activeAreaEditorMode) return;
-  if (Date.now() < suppressNextMapClickUntil) return;
-
-  const id = uid();
-  const houseData = {
-    id,
-    lat: e.latlng.lat,
-    lng: e.latlng.lng,
-    name: '',
-    rating: 0,
-    notes: '',
-    link: ''
-  };
-  housesRef.child(id).set(houseData);
-  setTimeout(() => openModal(id), 300);
-});
-
-const overlay   = document.getElementById('modal-overlay');
-const mTitle    = document.getElementById('modal-title');
-const mName     = document.getElementById('m-name');
-const mNotes    = document.getElementById('m-notes');
-const mLink     = document.getElementById('m-link');
-const mSave     = document.getElementById('m-save');
-const mDelete   = document.getElementById('m-delete');
-const mCancel   = document.getElementById('m-cancel');
-const starEls   = document.querySelectorAll('#star-rating .star');
-let modalRating = 0;
-
-function setStars(n) {
-  modalRating = n;
-  starEls.forEach(s => s.classList.toggle('filled', +s.dataset.v <= n));
-}
-
-starEls.forEach(s => {
-  s.addEventListener('click', () => setStars(+s.dataset.v));
-  s.addEventListener('mouseover', () => starEls.forEach(x => x.classList.toggle('filled', +x.dataset.v <= +s.dataset.v)));
-  s.addEventListener('mouseout',  () => setStars(modalRating));
-});
-
-function openModal(id) {
-  const entry = houseCache[id];
-  if (!entry) return;
-  const d = entry.data;
-  modalHouseId = id;
-  mTitle.textContent = d.name ? d.name : 'Huis bewerken';
-  mName.value  = d.name  || '';
-  mNotes.value = d.notes || '';
-  mLink.value  = d.link  || '';
-  setStars(d.rating || 0);
-  mDelete.style.display = '';
-  overlay.classList.add('open');
-}
-
-function closeModal() {
-  overlay.classList.remove('open');
-  modalHouseId = null;
-}
-
-mSave.addEventListener('click', () => {
-  if (!modalHouseId) return;
-  const updates = {
-    name:   mName.value.trim(),
-    rating: modalRating,
-    notes:  mNotes.value.trim(),
-    link:   mLink.value.trim()
-  };
-  housesRef.child(modalHouseId).update(updates);
-  toast('Huis opgeslagen!');
-  closeModal();
-});
-
-mDelete.addEventListener('click', () => {
-  if (!modalHouseId) return;
-  if (!confirm('Weet je zeker dat je dit huis wilt verwijderen?')) return;
-  housesRef.child(modalHouseId).remove();
-  toast('Huis verwijderd.');
-  closeModal();
-});
-
-mCancel.addEventListener('click', closeModal);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-
-const sidebar = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebar-toggle');
-
-function updateToggleIcon() {
-  const open = !sidebar.classList.contains('collapsed');
-  sidebarToggle.innerHTML = isMobile()
-    ? (open ? '&#9660;' : '&#9650;')
-    : '&#9776;';
-}
-
-if (isMobile()) sidebar.classList.add('collapsed');
-updateToggleIcon();
-
-sidebarToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('collapsed');
-  updateToggleIcon();
-  setTimeout(() => {
-    map.invalidateSize();
-  }, 260);
-});
-
-window.addEventListener('resize', () => {
-  updateToggleIcon();
-  if (!isMobile()) setMobileEditBarOpen(false);
-  if (isMobile()) setDesktopEditBarOpen(false);
-});
-
-document.querySelectorAll('.stab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('sec-' + tab.dataset.tab).classList.add('active');
-  });
-});
-
-document.getElementById('sort-huizen').addEventListener('change', renderSidebarHuizen);
-document.getElementById('house-search').addEventListener('input', renderSidebarHuizen);
-
-function renderSidebarGebieden() {
-  const container = document.getElementById('list-gebieden');
-  const areas = Object.values(areaCache);
-
-  if (!areas.length) {
-    container.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nog geen gebieden getekend.</p>';
-    return;
-  }
-
-  container.innerHTML = areas.map(({ data }) => {
-    const col = COLORS[data.color]?.hex || '#999';
-    const name = data.name || '<em style="color:var(--muted)">Naamloos</em>';
-    const tags = normalizeAreaTags(data.tags || []);
-    const tagHtml = tags.length
-      ? `<div class="sidebar-area-tags">
-          ${tags.slice(0, 4).map(tag => `
-            <span class="sidebar-area-tag ${tag.tone}">
-              ${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}
-            </span>
-          `).join('')}
-          ${tags.length > 4 ? `<span class="sidebar-area-tag positive">+${tags.length - 4}</span>` : ''}
-        </div>`
-      : '';
-
-    return `<div class="list-item" onclick="panToArea('${data.id}')">
-      <div class="dot" style="background:${col}"></div>
-      <div class="info">
-        <div class="name">${name}</div>
-        <div class="sub">${COLORS[data.color]?.label || ''}</div>
-        ${tagHtml}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-window.panToArea = function(id) {
-  const entry = areaCache[id];
-  if (!entry) return;
-  try { map.fitBounds(entry.layer.getBounds(), { padding: isMobile() ? [30, 30] : [60, 60] }); }
-  catch(e) {}
-};
-
-function renderSidebarHuizen() {
-  const container = document.getElementById('list-huizen');
-  const q = document.getElementById('house-search').value.toLowerCase();
-  const sort = document.getElementById('sort-huizen').value;
-
-  let houses = Object.values(houseCache).map(h => h.data);
-
-  if (q) houses = houses.filter(h =>
-    (h.name  || '').toLowerCase().includes(q) ||
-    (h.notes || '').toLowerCase().includes(q)
-  );
-
-  houses.sort((a, b) => {
-    if (sort === 'rating-desc') return (b.rating||0) - (a.rating||0);
-    if (sort === 'rating-asc')  return (a.rating||0) - (b.rating||0);
-    return (a.name||'').localeCompare(b.name||'', 'nl');
-  });
-
-  if (!houses.length) {
-    container.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Geen huizen gevonden.</p>';
-    return;
-  }
-
-  container.innerHTML = houses.map(d => {
-    const name  = d.name  || '<em style="color:var(--muted)">Naamloos huis</em>';
-    const notes = d.notes ? d.notes.slice(0, 60) + (d.notes.length > 60 ? '…' : '') : '';
-    return `<div class="list-item" onclick="panToHouse('${d.id}')">
-      <div style="font-size:20px;flex-shrink:0">🏠</div>
-      <div class="info">
-        <div class="name">${name}</div>
-        <div class="stars-sm">${starsHtml(d.rating||0, 12)}</div>
-        ${notes ? `<div class="sub">${notes}</div>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-window.panToHouse = function(id) {
-  const entry = houseCache[id];
-  if (!entry) return;
-  map.setView([entry.data.lat, entry.data.lng], 16);
-  openModal(id);
-};
-
-areasRef.on('child_added', snap => { renderArea(snap.val()); });
-areasRef.on('child_changed', snap => { renderArea(snap.val()); });
-areasRef.on('child_removed', snap => {
-  const id = snap.val().id;
-  if (areaCache[id]) {
-    drawnItems.removeLayer(areaCache[id].layer);
-    delete areaCache[id];
-    renderSidebarGebieden();
-  }
-  if (activeAreaId === id) {
-    fullyCloseAreaEditor();
-  }
-});
-
-housesRef.on('child_added', snap => { renderHouse(snap.val()); });
-housesRef.on('child_changed', snap => {
-  renderHouse(snap.val());
-  if (modalHouseId === snap.val().id && overlay.classList.contains('open')) {
-    mTitle.textContent = snap.val().name || 'Huis bewerken';
-  }
-});
-housesRef.on('child_removed', snap => {
-  const id = snap.val().id;
-  if (houseCache[id]) {
-    map.removeLayer(houseCache[id].marker);
-    delete houseCache[id];
-    renderSidebarHuizen();
-  }
-});
-
-renderSidebarGebieden();
-renderSidebarHuizen();
-</script>
-
-</body>
-</html>
