@@ -73,7 +73,11 @@
     .tooltip-wrap:hover .tip { display: block; }
 
     #map {
-      position: fixed; top: var(--toolbar-h); left: 0; right: 0; bottom: 0;
+      position: fixed;
+      top: var(--toolbar-h);
+      left: 0;
+      right: 0;
+      bottom: 0;
       z-index: 1;
     }
 
@@ -91,7 +95,7 @@
       color: #fff; border: none; cursor: pointer; font-size: 18px;
       display: flex; align-items: center; justify-content: center;
       z-index: 1200; box-shadow: 0 2px 8px rgba(0,0,0,.2);
-      transition: right .25s ease;
+      transition: right .25s ease, bottom .25s ease;
     }
     #sidebar:not(.collapsed) ~ #sidebar-toggle { right: calc(var(--sidebar-w) + 12px); }
 
@@ -140,9 +144,36 @@
       width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 3px;
     }
     .list-item .info { flex: 1; min-width: 0; }
-    .list-item .name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .list-item .name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .list-item .name {
+      font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .list-item .sub { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .stars-sm { color: #f59e0b; font-size: 12px; letter-spacing: 1px; }
+
+    .area-number-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #e3f2fd;
+      color: #0b4f9c;
+      flex-shrink: 0;
+    }
+    .list-item.active .area-number-badge {
+      background: #1565c0;
+      color: #fff;
+    }
 
     .area-inline-actions {
       display: none;
@@ -179,10 +210,6 @@
       background: #fff4f4;
       border-color: #f5c2c7;
       color: #b42318;
-    }
-    .area-inline-btn.delete:hover {
-      border-color: #e11d48;
-      color: #a61b1b;
     }
 
     .sidebar-area-tags {
@@ -327,10 +354,9 @@
     .area-editor-header {
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 8;
       background: #fff;
       padding-top: 14px;
-      margin-top: -18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 14px;
@@ -629,6 +655,37 @@
       box-shadow: 0 2px 8px rgba(0,0,0,.35) !important;
     }
 
+    .area-number-icon { pointer-events: none; }
+    .area-number-chip {
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 999px;
+      border: 2px solid #1565c0;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+      background: rgba(255,255,255,.92);
+    }
+    .area-name-chip {
+      margin-top: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(255,255,255,.92);
+      color: #1a1d23;
+      box-shadow: 0 2px 6px rgba(0,0,0,.18);
+      white-space: nowrap;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     #toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
       background: #333; color: #fff; padding: 8px 18px; border-radius: 20px;
@@ -670,28 +727,32 @@
 
       #sidebar {
         top: auto;
-        bottom: 0; left: 0; right: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
         width: 100%;
         height: 58vh;
         border-left: none;
         border-top: 1px solid var(--border);
         border-radius: 18px 18px 0 0;
         box-shadow: 0 -4px 20px rgba(0,0,0,.12);
-        transform: translateY(0) !important;
+        transform: translateY(100%);
         transition: transform .28s ease;
       }
-      #sidebar.collapsed { transform: translateY(100%) !important; }
+      #sidebar.collapsed { transform: translateY(100%); }
+      #sidebar.open { transform: translateY(0); }
 
       #sidebar-toggle {
         top: auto !important;
-        bottom: 20px; right: 16px;
-        width: 44px; height: 44px;
+        bottom: 20px;
+        right: 16px !important;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         font-size: 20px;
         box-shadow: 0 4px 14px rgba(0,0,0,.25);
       }
-      #sidebar:not(.collapsed) ~ #sidebar-toggle {
-        right: 16px !important;
+      #sidebar.open ~ #sidebar-toggle {
         bottom: calc(58vh + 14px);
       }
 
@@ -743,12 +804,13 @@
       }
 
       .area-editor-header {
-        top: 0;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 8 !important;
         background: #fff !important;
         padding-top: 14px !important;
-        margin-top: 0 !important;
-        position: sticky !important;
-        z-index: 8 !important;
+        padding-bottom: 12px !important;
+        margin-bottom: 14px !important;
       }
 
       .area-editor-toprow { align-items: flex-start; }
@@ -794,21 +856,6 @@
   </button>
 
   <span id="draw-mode-label"></span>
-
-  <div class="tb-sep"></div>
-
-  <div class="tooltip-wrap">
-    <button class="tb-btn" title="Uitleg">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-      <span class="btn-lbl">Uitleg</span>
-    </button>
-    <div class="tip">
-      <strong>Gebieden tekenen:</strong> Kies een kleur → klik "Gebied tekenen" of "Rechthoek" → teken op de kaart → dubbelklik om af te ronden.<br><br>
-      <strong>Huis toevoegen:</strong> Klik 1× op de kaart (ook op een getekend gebied) om een huis-markering te plaatsen.<br><br>
-      <strong>Gebied-instellingen:</strong> Dubbelklik op een getekend gebied of open info vanuit de sidebar.<br><br>
-      <strong>Snel bewerken:</strong> Selecteer een gebied in de sidebar en klik op “Bewerken”.
-    </div>
-  </div>
 </div>
 
 <div id="map"></div>
@@ -906,7 +953,7 @@
 
       <div id="area-edit-status" class="area-edit-status">
         <strong>Gebied bewerken staat aan</strong>
-        Sleep de zichtbare punten of voeg punten toe door op een lijn te tikken/klikken.
+        Sleep de zichtbare punten of klik op een rand om extra punten toe te voegen.
       </div>
 
       <div id="desktop-edit-bar" class="desktop-edit-bar">
@@ -1099,6 +1146,7 @@ let drawHandler = null;
 
 const areaCache  = {};
 const houseCache = {};
+let areaIndexMap = {};
 
 let modalHouseId = null;
 let activeAreaId = null;
@@ -1278,15 +1326,15 @@ function renderAreaTagChip(areaId, tag, selected) {
   }
 
   return `
-    <button
-      type="button"
-      class="area-tag-chip ${toneClass} is-selected"
-      onclick="removeCustomAreaTag('${areaId}', '${tag.id}')"
-    >
-      <span>${safeEmoji} ${safeLabel}</span>
-      <span class="tag-remove">−</span>
-    </button>
-  `;
+      <button
+        type="button"
+        class="area-tag-chip ${toneClass} is-selected"
+        onclick="removeCustomAreaTag('${areaId}', '${tag.id}')"
+      >
+        <span>${safeEmoji} ${safeLabel}</span>
+        <span class="tag-remove">−</span>
+      </button>
+    `;
 }
 
 window.toggleAreaPresetTag = toggleAreaPresetTag;
@@ -1375,6 +1423,54 @@ function setSelectedSidebarArea(id) {
   updateSidebarAreaActions();
 }
 
+function computeAreaCenter(layer) {
+  return layer.getBounds().getCenter();
+}
+
+function refreshAreaLabelsOnMap() {
+  Object.values(areaCache).forEach(entry => {
+    if (entry.labelMarker) {
+      map.removeLayer(entry.labelMarker);
+      entry.labelMarker = null;
+    }
+    if (entry.nameMarker) {
+      map.removeLayer(entry.nameMarker);
+      entry.nameMarker = null;
+    }
+  });
+
+  Object.values(areaCache).forEach(entry => {
+    const id = entry.data.id;
+    const nr = areaIndexMap[id];
+    if (!nr) return;
+
+    const center = computeAreaCenter(entry.layer);
+    const col = COLORS[entry.data.color]?.hex || '#4b5563';
+
+    const numberIcon = L.divIcon({
+      className: 'area-number-icon',
+      html: `<div class="area-number-chip" style="border-color:${col};color:${col};">${nr}</div>`,
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+
+    const labelMarker = L.marker(center, { icon: numberIcon, interactive: false }).addTo(map);
+    entry.labelMarker = labelMarker;
+
+    const name = (entry.data.name || '').trim();
+    if (name) {
+      const nameIcon = L.divIcon({
+        className: 'area-number-icon',
+        html: `<div class="area-name-chip">${escapeHtml(name)}</div>`,
+        iconSize: [120, 20],
+        iconAnchor: [-8, 12]
+      });
+      const nameMarker = L.marker(center, { icon: nameIcon, interactive: false }).addTo(map);
+      entry.nameMarker = nameMarker;
+    }
+  });
+}
+
 function renderAreaEditor() {
   if (!activeAreaId || !areaCache[activeAreaId]) return;
   const data = areaCache[activeAreaId].data;
@@ -1382,7 +1478,8 @@ function renderAreaEditor() {
   const selectedIds = new Set(selectedTags.map(tag => tag.id));
   const customTags = selectedTags.filter(tag => !tag.preset);
 
-  areaModalTitle.textContent = getAreaEditorTitle(data);
+  const nr = areaIndexMap[data.id] || '?';
+  areaModalTitle.textContent = `${nr}. ${getAreaEditorTitle(data)}`;
   areaModalSubtitle.innerHTML = `${escapeHtml(COLORS[data.color]?.label || '')}<br>Wijzig de naam, tags of vorm van dit gebied.`;
   areaNameInput.value = data.name || '';
   syncAreaNameSaveButton();
@@ -1600,6 +1697,7 @@ function stopAreaGeometryEdit(restoreOriginal = false) {
   setDesktopEditBarOpen(false);
   setMobileEditBarOpen(false);
   lockMapForGeometryEdit(false);
+  refreshAreaLabelsOnMap();
 }
 
 function startAreaGeometryEdit(id) {
@@ -1632,3 +1730,471 @@ function startAreaGeometryEdit(id) {
 
   try {
     map.fitBounds(layer.getBounds(), { padding: isMobile() ? [60, 60] : [70, 70] });
+  } catch (e) {}
+
+  if (isMobile()) {
+    setAreaOverlayOpen(false);
+    setDesktopEditBarOpen(false);
+    setMobileEditBarOpen(true);
+    toast('Sleep de blauwe punten van het gebied.');
+  } else {
+    setAreaOverlayOpen(true);
+    setDesktopEditBarOpen(true);
+    renderAreaEditor();
+    toast('Sleep de blauwe punten van het gebied.');
+  }
+}
+
+function saveAreaGeometry(id) {
+  const entry = areaCache[id];
+  if (!entry || activeAreaEditId !== id) return;
+
+  const newLatLngs = captureAreaLatLngs(entry.layer, entry.data.type);
+  areasRef.child(id).update({
+    latlngs: JSON.stringify(newLatLngs)
+  });
+
+  stopAreaGeometryEdit(false);
+
+  if (isMobile()) {
+    setAreaOverlayOpen(false);
+  } else if (activeAreaId === id) {
+    openAreaEditor(id);
+  }
+
+  toast('Gebied bijgewerkt!');
+}
+
+function cancelAreaGeometryEdit(id) {
+  if (activeAreaEditId !== id) return;
+  stopAreaGeometryEdit(true);
+
+  if (isMobile()) {
+    setAreaOverlayOpen(false);
+  } else if (activeAreaId === id) {
+    openAreaEditor(id);
+  }
+
+  toast('Bewerken geannuleerd.');
+}
+
+areaEditGeometryBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  startAreaGeometryEdit(activeAreaId);
+});
+
+desktopSaveEditBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  saveAreaGeometry(activeAreaId);
+});
+
+desktopCancelEditBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  cancelAreaGeometryEdit(activeAreaId);
+});
+
+mobileSaveEditBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  saveAreaGeometry(activeAreaId);
+});
+
+mobileCancelEditBtn.addEventListener('click', () => {
+  if (!activeAreaId) return;
+  cancelAreaGeometryEdit(activeAreaId);
+});
+
+function tryInitialZoomToDefaultArea() {
+  if (initialAreaZoomDone) return;
+
+  const match = Object.values(areaCache).find(({ data }) =>
+    String(data.name || '').trim().toLowerCase() === DEFAULT_START_AREA_NAME
+  );
+
+  if (!match) return;
+
+  initialAreaZoomDone = true;
+  try {
+    map.fitBounds(match.layer.getBounds(), {
+      padding: isMobile() ? [30, 30] : [60, 60]
+    });
+  } catch (e) {}
+}
+
+function renderArea(data) {
+  if (areaCache[data.id]) {
+    if (areaCache[data.id].layer) drawnItems.removeLayer(areaCache[data.id].layer);
+    if (areaCache[data.id].labelMarker) map.removeLayer(areaCache[data.id].labelMarker);
+    if (areaCache[data.id].nameMarker) map.removeLayer(areaCache[data.id].nameMarker);
+  }
+
+  const normalizedData = {
+    ...data,
+    tags: normalizeAreaTags(data.tags || [])
+  };
+
+  const col = COLORS[normalizedData.color]?.hex || '#999';
+  const latlngs = JSON.parse(normalizedData.latlngs);
+
+  let layer;
+  if (normalizedData.type === 'rectangle') {
+    layer = L.rectangle(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
+  } else {
+    layer = L.polygon(latlngs, { color: col, fillColor: col, fillOpacity: 0.4, weight: 2 });
+  }
+
+  let _areaClickTimer = null;
+  layer.on('click', e => {
+    L.DomEvent.stopPropagation(e);
+    if (currentDrawMode || activeAreaEditorMode) return;
+    if (_areaClickTimer) return;
+
+    _areaClickTimer = setTimeout(() => {
+      _areaClickTimer = null;
+      if (activeAreaEditorMode) return;
+      const hid = uid();
+      housesRef.child(hid).set({ id: hid, lat: e.latlng.lat, lng: e.latlng.lng, name: '', rating: 0, notes: '', link: '' });
+      setTimeout(() => openModal(hid), 300);
+    }, 260);
+  });
+
+  layer.on('dblclick', e => {
+    L.DomEvent.stopPropagation(e);
+    if (_areaClickTimer) { clearTimeout(_areaClickTimer); _areaClickTimer = null; }
+    if (activeAreaEditorMode) return;
+    openAreaEditor(normalizedData.id);
+  });
+
+  drawnItems.addLayer(layer);
+  areaCache[normalizedData.id] = {
+    data: normalizedData,
+    layer,
+    editorInstance: null,
+    originalLatLngsBeforeEdit: null,
+    labelMarker: null,
+    nameMarker: null
+  };
+
+  renderSidebarGebieden();
+  tryInitialZoomToDefaultArea();
+
+  if (activeAreaId === normalizedData.id && !activeAreaEditorMode) {
+    renderAreaEditor();
+  }
+}
+
+function houseIcon() {
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width:28px;height:28px;border-radius:50%;
+      background:#fff;border:3px solid #1a1d23;
+      box-shadow:0 2px 6px rgba(0,0,0,.3);
+      display:flex;align-items:center;justify-content:center;
+      font-size:13px;line-height:1;">🏠</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -16]
+  });
+}
+
+function renderHouse(data) {
+  if (houseCache[data.id]) {
+    map.removeLayer(houseCache[data.id].marker);
+  }
+
+  const marker = L.marker([data.lat, data.lng], { icon: houseIcon(), draggable: true });
+  marker.on('click', e => {
+    L.DomEvent.stopPropagation(e);
+    if (activeAreaEditorMode) return;
+    openModal(data.id);
+  });
+  marker.on('dragend', () => {
+    const pos = marker.getLatLng();
+    housesRef.child(data.id).update({ lat: pos.lat, lng: pos.lng });
+    if (houseCache[data.id]) {
+      houseCache[data.id].data.lat = pos.lat;
+      houseCache[data.id].data.lng = pos.lng;
+    }
+  });
+  marker.addTo(map);
+  houseCache[data.id] = { data, marker };
+  renderSidebarHuizen();
+}
+
+map.on('click', e => {
+  if (currentDrawMode || activeAreaEditorMode) return;
+  if (Date.now() < suppressNextMapClickUntil) return;
+
+  const id = uid();
+  const houseData = {
+    id,
+    lat: e.latlng.lat,
+    lng: e.latlng.lng,
+    name: '',
+    rating: 0,
+    notes: '',
+    link: ''
+  };
+  housesRef.child(id).set(houseData);
+  setTimeout(() => openModal(id), 300);
+});
+
+const overlay   = document.getElementById('modal-overlay');
+const mTitle    = document.getElementById('modal-title');
+const mName     = document.getElementById('m-name');
+const mNotes    = document.getElementById('m-notes');
+const mLink     = document.getElementById('m-link');
+const mSave     = document.getElementById('m-save');
+const mDelete   = document.getElementById('m-delete');
+const mCancel   = document.getElementById('m-cancel');
+const starEls   = document.querySelectorAll('#star-rating .star');
+let modalRating = 0;
+
+function setStars(n) {
+  modalRating = n;
+  starEls.forEach(s => s.classList.toggle('filled', +s.dataset.v <= n));
+}
+
+starEls.forEach(s => {
+  s.addEventListener('click', () => setStars(+s.dataset.v));
+  s.addEventListener('mouseover', () => starEls.forEach(x => x.classList.toggle('filled', +x.dataset.v <= +s.dataset.v)));
+  s.addEventListener('mouseout',  () => setStars(modalRating));
+});
+
+function openModal(id) {
+  const entry = houseCache[id];
+  if (!entry) return;
+  const d = entry.data;
+  modalHouseId = id;
+  mTitle.textContent = d.name ? d.name : 'Huis bewerken';
+  mName.value  = d.name  || '';
+  mNotes.value = d.notes || '';
+  mLink.value  = d.link  || '';
+  setStars(d.rating || 0);
+  mDelete.style.display = '';
+  overlay.classList.add('open');
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  modalHouseId = null;
+}
+
+mSave.addEventListener('click', () => {
+  if (!modalHouseId) return;
+  const updates = {
+    name:   mName.value.trim(),
+    rating: modalRating,
+    notes:  mNotes.value.trim(),
+    link:   mLink.value.trim()
+  };
+  housesRef.child(modalHouseId).update(updates);
+  toast('Huis opgeslagen!');
+  closeModal();
+});
+
+mDelete.addEventListener('click', () => {
+  if (!modalHouseId) return;
+  if (!confirm('Weet je zeker dat je dit huis wilt verwijderen?')) return;
+  housesRef.child(modalHouseId).remove();
+  toast('Huis verwijderd.');
+  closeModal();
+});
+
+mCancel.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+
+function syncSidebarState() {
+  if (isMobile()) {
+    sidebar.classList.remove('open');
+    sidebar.classList.add('collapsed');
+  } else {
+    sidebar.classList.remove('collapsed');
+    sidebar.classList.remove('open');
+  }
+  updateToggleIcon();
+  setTimeout(() => map.invalidateSize(), 260);
+}
+
+function updateToggleIcon() {
+  if (isMobile()) {
+    sidebarToggle.innerHTML = sidebar.classList.contains('open') ? '&#9660;' : '&#9650;';
+  } else {
+    sidebarToggle.innerHTML = '&#9776;';
+  }
+}
+
+syncSidebarState();
+
+sidebarToggle.addEventListener('click', () => {
+  if (isMobile()) {
+    const isOpen = sidebar.classList.contains('open');
+    if (isOpen) {
+      sidebar.classList.remove('open');
+      sidebar.classList.add('collapsed');
+    } else {
+      sidebar.classList.add('open');
+      sidebar.classList.remove('collapsed');
+    }
+  } else {
+    sidebar.classList.toggle('collapsed');
+  }
+
+  updateToggleIcon();
+  setTimeout(() => map.invalidateSize(), 260);
+});
+
+window.addEventListener('resize', () => {
+  syncSidebarState();
+  if (!isMobile()) setMobileEditBarOpen(false);
+  if (isMobile()) setDesktopEditBarOpen(false);
+});
+
+document.querySelectorAll('.stab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('sec-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('sort-huizen').addEventListener('change', renderSidebarHuizen);
+document.getElementById('house-search').addEventListener('input', renderSidebarHuizen);
+
+function renderSidebarGebieden() {
+  const list = document.getElementById('list-gebieden');
+  const entries = Object.values(areaCache).sort((a, b) => {
+    const an = (a.data.name || '').toLowerCase();
+    const bn = (b.data.name || '').toLowerCase();
+    if (an && bn) return an.localeCompare(bn) || a.data.id.localeCompare(b.data.id);
+    if (an && !bn) return -1;
+    if (!an && bn) return 1;
+    return a.data.id.localeCompare(b.data.id);
+  });
+
+  areaIndexMap = {};
+  entries.forEach((entry, idx) => {
+    areaIndexMap[entry.data.id] = idx + 1;
+  });
+
+  list.innerHTML = entries.map(({ data, layer }) => {
+    const nr = areaIndexMap[data.id] || '?';
+    const tags = normalizeAreaTags(data.tags || []);
+    const name = data.name || 'Naamloos gebied';
+    const sub = COLORS[data.color]?.label || '';
+    const active = selectedSidebarAreaId === data.id;
+    const tagHtml = tags.length
+      ? `<div class="sidebar-area-tags">${tags.slice(0, 3).map(tag => `
+          <span class="sidebar-area-tag ${tag.tone}">${escapeHtml(tag.emoji)} ${escapeHtml(tag.label)}</span>
+        `).join('')}</div>`
+      : '';
+
+    return `
+      <div class="list-item ${active ? 'active' : ''}" data-area-id="${data.id}">
+        <div class="dot" style="background:${COLORS[data.color]?.hex || '#999'}"></div>
+        <div class="info">
+          <div class="name-row">
+            <span class="area-number-badge">${nr}</span>
+            <div class="name">${escapeHtml(name)}</div>
+          </div>
+          <div class="sub">${escapeHtml(sub)}</div>
+          ${tagHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  list.querySelectorAll('.list-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const id = item.dataset.areaId;
+      setSelectedSidebarArea(id);
+      const entry = areaCache[id];
+      if (entry && entry.layer) {
+        try {
+          map.fitBounds(entry.layer.getBounds(), { padding: isMobile() ? [30, 30] : [50, 50] });
+        } catch (e) {}
+      }
+    });
+  });
+
+  updateSidebarAreaActions();
+  refreshAreaLabelsOnMap();
+}
+
+function renderSidebarHuizen() {
+  const list = document.getElementById('list-huizen');
+  const search = (document.getElementById('house-search').value || '').toLowerCase().trim();
+  const sort = document.getElementById('sort-huizen').value;
+
+  let arr = Object.values(houseCache).map(x => x.data);
+
+  if (search) {
+    arr = arr.filter(h =>
+      (h.name || '').toLowerCase().includes(search) ||
+      (h.notes || '').toLowerCase().includes(search)
+    );
+  }
+
+  arr.sort((a, b) => {
+    if (sort === 'rating-asc') return (a.rating || 0) - (b.rating || 0);
+    if (sort === 'name-asc') return (a.name || '').localeCompare(b.name || '');
+    return (b.rating || 0) - (a.rating || 0);
+  });
+
+  list.innerHTML = arr.map(h => `
+    <div class="list-item" data-house-id="${h.id}">
+      <div class="dot" style="background:#1a1d23;border-radius:50%"></div>
+      <div class="info">
+        <div class="name">${escapeHtml(h.name || 'Naamloos huis')}</div>
+        <div class="sub">${starsHtml(h.rating || 0, 12)}</div>
+        ${h.notes ? `<div class="sub">${escapeHtml(h.notes)}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.list-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const id = item.dataset.houseId;
+      const entry = houseCache[id];
+      if (!entry) return;
+      map.setView([entry.data.lat, entry.data.lng], Math.max(map.getZoom(), 16));
+      openModal(id);
+    });
+  });
+}
+
+areasRef.on('child_added', snap => renderArea(snap.val()));
+areasRef.on('child_changed', snap => renderArea(snap.val()));
+areasRef.on('child_removed', snap => {
+  const id = snap.key;
+  if (!areaCache[id]) return;
+
+  if (areaCache[id].layer) drawnItems.removeLayer(areaCache[id].layer);
+  if (areaCache[id].labelMarker) map.removeLayer(areaCache[id].labelMarker);
+  if (areaCache[id].nameMarker) map.removeLayer(areaCache[id].nameMarker);
+
+  delete areaCache[id];
+
+  if (activeAreaId === id) activeAreaId = null;
+  if (activeAreaEditId === id) activeAreaEditId = null;
+  if (selectedSidebarAreaId === id) selectedSidebarAreaId = null;
+
+  renderSidebarGebieden();
+});
+
+housesRef.on('child_added', snap => renderHouse(snap.val()));
+housesRef.on('child_changed', snap => renderHouse(snap.val()));
+housesRef.on('child_removed', snap => {
+  const id = snap.key;
+  if (!houseCache[id]) return;
+  map.removeLayer(houseCache[id].marker);
+  delete houseCache[id];
+  renderSidebarHuizen();
+});
+</script>
+</body>
+</html>
